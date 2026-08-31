@@ -1,247 +1,185 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 
 export default function DashboardPage() {
-  const [claimed, setClaimed] = useState(false);
-
-  const principal = 1000000;
+  const principal = 50000000;
   const dailyProfit = Math.floor((principal * 0.05) / 30);
-  const wallet = 128450;
+  const wallet = 12450000;
+  const totalProfit = 4250000;
 
   const money = (value: number) =>
     new Intl.NumberFormat("fa-IR").format(value);
 
   return (
-    <main
-      dir="rtl"
-      style={{
-        minHeight: "100vh",
-        background: "#050914",
-        color: "#fff",
-        fontFamily: "Tahoma, Arial, sans-serif",
-        paddingBottom: "50px",
-      }}
-    >
-      {/* Header */}
-      <header
-        style={{
-          padding: "22px 18px",
-          borderBottom: "1px solid #172033",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              fontSize: "25px",
-              fontWeight: 900,
-              color: "#3b82f6",
-            }}
-          >
-            RECHNO
-          </div>
+    <main className="dashboardPage" dir="rtl">
+      <header className="dashHeader">
+        <Link href="/" className="dashLogo">
+          RET
+        </Link>
 
-          <div style={{ color: "#8b9bb4", fontSize: "12px" }}>
-            پنل سرمایه‌گذاری
-          </div>
-        </div>
-
-        <div
-          style={{
-            background: "#101827",
-            padding: "10px 14px",
-            borderRadius: "12px",
-            fontSize: "13px",
-          }}
-        >
-          حساب کاربری
-        </div>
+        <div className="userBadge">حساب کاربری</div>
       </header>
 
-      <section
-        style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-          padding: "25px 16px",
-        }}
-      >
-        <div style={{ marginBottom: "25px" }}>
-          <div style={{ color: "#8b9bb4", fontSize: "14px" }}>
-            خوش آمدید 👋
-          </div>
-
-          <h1
-            style={{
-              margin: "7px 0",
-              fontSize: "27px",
-            }}
-          >
-            داشبورد سرمایه‌گذاری
-          </h1>
+      <section className="dashContainer">
+        <div className="dashTitle">
+          <span>پنل سرمایه‌گذار</span>
+          <h1>داشبورد</h1>
+          <p>مدیریت سرمایه، سود، کیف پول و دعوت دوستان</p>
         </div>
 
-        {/* Statistics */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
-            gap: "12px",
-          }}
-        >
-          <Card
-            title="سرمایه فعال"
+        <div className="statsGrid">
+          <StatCard
+            title="اصل سرمایه فعال"
             value={`${money(principal)} تومان`}
           />
 
-          <Card
+          <StatCard
             title="سود امروز"
             value={`${money(dailyProfit)} تومان`}
+            green
           />
 
-          <Card
+          <StatCard
+            title="سود کل دریافت‌شده"
+            value={`${money(totalProfit)} تومان`}
+          />
+
+          <StatCard
             title="موجودی کیف پول"
             value={`${money(wallet)} تومان`}
           />
-
-          <Card title="سود ماهانه" value="۵٪" />
         </div>
 
-        {/* Daily profit */}
-        <div style={panel}>
-          <div>
-            <div style={smallTitle}>سود روزانه</div>
+        <div className="dashGrid">
+          <section className="dashPanel">
+            <div className="panelTop">
+              <div>
+                <span className="panelLabel">سود روزانه</span>
+                <h2>{money(dailyProfit)} تومان</h2>
+              </div>
 
-            <h2 style={{ margin: "8px 0" }}>
-              {money(dailyProfit)} تومان
-            </h2>
-
-            <div style={description}>
-              برای دریافت سود امروز روی دکمه زیر بزنید.
+              <span className="readyBadge">آماده دریافت</span>
             </div>
-          </div>
 
-          <button
-            onClick={() => setClaimed(true)}
-            disabled={claimed}
-            style={{
-              ...primaryButton,
-              opacity: claimed ? 0.55 : 1,
-            }}
-          >
-            {claimed ? "✓ سود امروز دریافت شد" : "دریافت سود امروز"}
-          </button>
+            <p className="panelText">
+              سود امروزت آماده است. برای دریافت وارد صفحه مخصوص سود روزانه شو.
+            </p>
+
+            <Link className="dashPrimary" href="/daily-profit">
+              دریافت سود امروز
+            </Link>
+          </section>
+
+          <section className="dashPanel">
+            <span className="panelLabel">کیف پول</span>
+            <h2>{money(wallet)} تومان</h2>
+
+            <p className="panelText">
+              سودها و پاداش‌های دعوت بعد از دریافت به کیف پول اضافه می‌شوند.
+            </p>
+
+            <button className="dashPrimary">درخواست برداشت</button>
+          </section>
         </div>
 
-        {/* Investment */}
-        <div style={panel}>
-          <div style={smallTitle}>سرمایه‌گذاری فعال</div>
+        <section className="dashPanel">
+          <div className="panelTop">
+            <div>
+              <span className="panelLabel">سرمایه‌گذاری فعال</span>
+              <h2>{money(principal)} تومان</h2>
+            </div>
 
-          <div style={row}>
-            <span>اصل سرمایه</span>
-            <strong>{money(principal)} تومان</strong>
+            <span className="activeBadge">● فعال</span>
           </div>
 
-          <div style={row}>
-            <span>نرخ سود ماهانه</span>
-            <strong style={{ color: "#34d399" }}>۵٪</strong>
+          <div className="infoRow">
+            <span>نرخ ماهانه</span>
+            <strong>۵٪</strong>
           </div>
 
-          <div style={row}>
-            <span>وضعیت</span>
-            <strong style={{ color: "#34d399" }}>فعال ●</strong>
+          <div className="infoRow">
+            <span>حداقل سرمایه</span>
+            <strong>۵۰٬۰۰۰ تومان</strong>
           </div>
 
-          <button style={outlineButton}>
-            برداشت اصل سرمایه
-          </button>
-        </div>
+          <button className="dashOutline">برداشت اصل سرمایه</button>
+        </section>
 
-        {/* Wallet */}
-        <div style={panel}>
-          <div style={smallTitle}>کیف پول من</div>
+        <section className="dashPanel referralPanel">
+          <span className="panelLabel">دعوت دوستان</span>
 
-          <h2 style={{ margin: "10px 0" }}>
-            {money(wallet)} تومان
-          </h2>
+          <h2>۲٪ پاداش از سود روزانه دوستان</h2>
 
-          <div style={description}>
-            سود روزانه و پاداش دعوت دوستان به این کیف پول اضافه می‌شود.
-          </div>
-
-          <button style={primaryButton}>
-            درخواست برداشت
-          </button>
-        </div>
-
-        {/* Referral */}
-        <div
-          style={{
-            ...panel,
-            background:
-              "linear-gradient(135deg,#101a31,#07182a)",
-          }}
-        >
-          <div style={smallTitle}>🎁 دعوت دوستان</div>
-
-          <h2>از سود دوستانت درآمد بگیر</h2>
-
-          <p style={description}>
-            با دعوت دوستان، معادل ۲٪ از سود روزانه‌ای که
-            دریافت می‌کنند به کیف پول شما اضافه می‌شود.
+          <p className="panelText">
+            هر کاربر یک کد دعوت اختصاصی دارد. از سود روزانه دوستان مستقیم خود
+            پاداش دریافت می‌کنی.
           </p>
 
-          <div
-            style={{
-              background: "#050914",
-              border: "1px dashed #3b82f6",
-              borderRadius: "14px",
-              padding: "15px",
-              textAlign: "center",
-              marginTop: "18px",
-            }}
-          >
-            <div style={{ color: "#8b9bb4", fontSize: "12px" }}>
-              کد دعوت شما
-            </div>
+          <div className="refCode">RET7X9K</div>
 
-            <div
-              style={{
-                fontSize: "22px",
-                fontWeight: 900,
-                letterSpacing: "2px",
-                marginTop: "7px",
-                direction: "ltr",
-              }}
-            >
-              RECHNO-AB12CD
-            </div>
-          </div>
+          <button className="dashPrimary">اشتراک‌گذاری کد دعوت</button>
+        </section>
 
-          <button style={primaryButton}>
-            اشتراک‌گذاری کد دعوت
-          </button>
-        </div>
+        <section className="dashPanel">
+          <span className="panelLabel">آخرین تراکنش‌ها</span>
 
-        {/* Transactions */}
-<div style={panel}>
-  <div style={smallTitle}>آخرین تراکنش‌ها</div>
+          <Transaction
+            title="دریافت سود روزانه"
+            amount={`+${money(dailyProfit)} تومان`}
+          />
 
-  <Transaction
-    title="سود روزانه"
-    amount={`+ ${money(dailyProfit)} تومان`}
-  />
+          <Transaction
+            title="پاداش دعوت"
+            amount="+۲٬۴۵۰ تومان"
+          />
 
-  <Transaction
-    title="پاداش دعوت دوست"
-    amount="+ ۳۳ تومان"
-  />
+          <Transaction
+            title="برداشت کیف پول"
+            amount="-۵۰۰٬۰۰۰ تومان"
+            negative
+          />
 
-  <Transaction
-    title="برداشت کیف پول"
-    amount="- ۵۰٬۰۰۰ تومان"
-    negative
-  />
-</div>
+          <Transaction
+            title="افزایش سرمایه"
+            amount="+۵٬۰۰۰٬۰۰۰ تومان"
+          />
+        </section>
+      </section>
+    </main>
+  );
+}
+
+function StatCard({
+  title,
+  value,
+  green = false,
+}: {
+  title: string;
+  value: string;
+  green?: boolean;
+}) {
+  return (
+    <div className="statCard">
+      <span>{title}</span>
+      <strong className={green ? "greenValue" : ""}>{value}</strong>
+    </div>
+  );
+}
+
+function Transaction({
+  title,
+  amount,
+  negative = false,
+}: {
+  title: string;
+  amount: string;
+  negative?: boolean;
+}) {
+  return (
+    <div className="statCard">
+      <span>{title}</span>
+      <strong className={green ? "greenValue" : ""}>{value}</strong>
+    </div>
+  );
+}
