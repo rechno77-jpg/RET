@@ -1,187 +1,156 @@
-"use client";
-
 import Link from "next/link";
 
 export default function DashboardPage() {
-  const principal = 50000000;
-  const dailyProfit = Math.floor((principal * 0.05) / 30);
-  const wallet = 12450000;
-  const totalProfit = 4250000;
-
-  const money = (value: number) =>
-    new Intl.NumberFormat("fa-IR").format(value);
-
   return (
-    <main className="dashboardPage" dir="rtl">
-      <header className="dashHeader">
-        <Link href="/" className="dashLogo">
-          RET
-        </Link>
+    <main className="dashboard" dir="rtl">
+      <div className="container">
 
-        <div className="userBadge">حساب کاربری</div>
-      </header>
+        <nav className="nav">
+          <div className="brand">
+            <div className="brand-mark">R</div>
+            <div className="logo">RET</div>
+          </div>
 
-      <section className="dashContainer">
-        <div className="dashTitle">
-          <span>پنل سرمایه‌گذار</span>
-          <h1>داشبورد</h1>
-          <p>مدیریت سرمایه، سود، کیف پول و دعوت دوستان</p>
+          <Link className="btn btn-ghost" href="/">
+            صفحه اصلی
+          </Link>
+        </nav>
+
+        <div className="dash-head">
+          <div>
+            <div className="kicker">داشبورد سرمایه‌گذار</div>
+            <h1 style={{ fontSize: 34, margin: "12px 0 0" }}>
+              خوش اومدی 👋
+            </h1>
+            <p className="section-sub">
+              مدیریت سرمایه، سود روزانه و کیف پول
+            </p>
+          </div>
         </div>
 
-        <div className="statsGrid">
-          <StatCard
-            title="اصل سرمایه فعال"
-            value={`${money(principal)} تومان`}
-          />
+        <section className="dash-grid">
+          <div className="panel">
+            <div className="label">اصل سرمایه فعال</div>
+            <div className="value">۵۰٬۰۰۰٬۰۰۰ تومان</div>
+          </div>
 
-          <StatCard
-            title="سود امروز"
-            value={`${money(dailyProfit)} تومان`}
-            green
-          />
+          <div className="panel">
+            <div className="label">سود امروز</div>
+            <div className="value" style={{ color: "#28c785" }}>
+              +۸۳٬۳۳۳ تومان
+            </div>
+          </div>
 
-          <StatCard
-            title="سود کل دریافت‌شده"
-            value={`${money(totalProfit)} تومان`}
-          />
+          <div className="panel">
+            <div className="label">سود کل دریافتی</div>
+            <div className="value">۴٬۲۵۰٬۰۰۰ تومان</div>
+          </div>
 
-          <StatCard
-            title="موجودی کیف پول"
-            value={`${money(wallet)} تومان`}
-          />
-        </div>
+          <div className="panel">
+            <div className="label">موجودی کیف پول</div>
+            <div className="value">۱۲٬۴۵۰٬۰۰۰ تومان</div>
+          </div>
+        </section>
 
-        <div className="dashGrid">
-          <section className="dashPanel">
-            <div className="panelTop">
-              <div>
-                <span className="panelLabel">سود روزانه</span>
-                <h2>{money(dailyProfit)} تومان</h2>
-              </div>
+        <section className="wallet">
+          <div className="panel">
+            <div className="label">دریافت سود روزانه</div>
 
-              <span className="readyBadge">آماده دریافت</span>
+            <div className="value" style={{ color: "#28c785" }}>
+              ۸۳٬۳۳۳ تومان
             </div>
 
-            <p className="panelText">
-              سود امروزت آماده است. برای دریافت وارد صفحه مخصوص سود روزانه شو.
+            <p className="section-sub">
+              سود امروز آماده دریافت است.
             </p>
 
-            <Link className="dashPrimary" href="/daily-profit">
+            <Link className="btn btn-primary" href="/daily-profit">
               دریافت سود امروز
             </Link>
-          </section>
+          </div>
 
-          <section className="dashPanel">
-            <span className="panelLabel">کیف پول</span>
-            <h2>{money(wallet)} تومان</h2>
+          <div className="panel">
+            <div className="label">کیف پول</div>
+            <div className="value">۱۲٬۴۵۰٬۰۰۰ تومان</div>
 
-            <p className="panelText">
-              سودها و پاداش‌های دعوت بعد از دریافت به کیف پول اضافه می‌شوند.
+            <p className="section-sub">
+              سود و پاداش‌های دریافتی در این بخش نمایش داده می‌شوند.
             </p>
 
-            <button className="dashPrimary">درخواست برداشت</button>
-          </section>
-        </div>
+            <button className="btn btn-primary">
+              درخواست برداشت
+            </button>
+          </div>
+        </section>
 
-        <section className="dashPanel">
-          <div className="panelTop">
-            <div>
-              <span className="panelLabel">سرمایه‌گذاری فعال</span>
-              <h2>{money(principal)} تومان</h2>
+        <section className="wallet">
+          <div className="panel">
+            <div className="label">دعوت دوستان</div>
+            <div className="value">۲٪ پاداش</div>
+
+            <p className="section-sub">
+              با دعوت مستقیم دوستان، از سود روزانه آن‌ها پاداش دریافت می‌کنی.
+            </p>
+
+            <div className="ref-code">
+              RET7X9K
             </div>
-
-            <span className="activeBadge">● فعال</span>
           </div>
 
-          <div className="infoRow">
-            <span>نرخ ماهانه</span>
-            <strong>۵٪</strong>
+          <div className="panel">
+            <div className="label">آمار دعوت</div>
+            <div className="value">۸ دوست فعال</div>
+
+            <p className="section-sub">
+              پاداش امروز:
+              <span style={{ color: "#28c785" }}>
+                {" "}+۲٬۴۰۰ تومان
+              </span>
+            </p>
+          </div>
+        </section>
+
+        <section className="panel" style={{ marginTop: 16 }}>
+          <div className="value" style={{ fontSize: 20 }}>
+            آخرین تراکنش‌ها
           </div>
 
-          <div className="infoRow">
-            <span>حداقل سرمایه</span>
-            <strong>۵۰٬۰۰۰ تومان</strong>
-          </div>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>نوع</th>
+                <th>مبلغ</th>
+                <th>وضعیت</th>
+              </tr>
+            </thead>
 
-          <button className="dashOutline">برداشت اصل سرمایه</button>
+            <tbody>
+              <tr>
+                <td>سود روزانه</td>
+                <td style={{ color: "#28c785" }}>
+                  +۸۳٬۳۳۳
+                </td>
+                <td>ثبت شد</td>
+              </tr>
+
+              <tr>
+                <td>پاداش دعوت</td>
+                <td style={{ color: "#28c785" }}>
+                  +۲٬۴۰۰
+                </td>
+                <td>ثبت شد</td>
+              </tr>
+
+              <tr>
+                <td>برداشت کیف پول</td>
+                <td>۵۰۰٬۰۰۰</td>
+                <td>در حال بررسی</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
-        <section className="dashPanel referralPanel">
-          <span className="panelLabel">دعوت دوستان</span>
-
-          <h2>۲٪ پاداش از سود روزانه دوستان</h2>
-
-          <p className="panelText">
-            هر کاربر یک کد دعوت اختصاصی دارد. از سود روزانه دوستان مستقیم خود
-            پاداش دریافت می‌کنی.
-          </p>
-
-          <div className="refCode">RET7X9K</div>
-
-          <button className="dashPrimary">اشتراک‌گذاری کد دعوت</button>
-        </section>
-
-        <section className="dashPanel">
-          <span className="panelLabel">آخرین تراکنش‌ها</span>
-
-          <Transaction
-            title="دریافت سود روزانه"
-            amount={`+${money(dailyProfit)} تومان`}
-          />
-
-          <Transaction
-            title="پاداش دعوت"
-            amount="+۲٬۴۵۰ تومان"
-          />
-
-          <Transaction
-            title="برداشت کیف پول"
-            amount="-۵۰۰٬۰۰۰ تومان"
-            negative
-          />
-
-          <Transaction
-            title="افزایش سرمایه"
-            amount="+۵٬۰۰۰٬۰۰۰ تومان"
-          />
-        </section>
-      </section>
+      </div>
     </main>
-  );
-}
-
-function StatCard({
-  title,
-  value,
-  green = false,
-}: {
-  title: string;
-  value: string;
-  green?: boolean;
-}) {
-  return (
-    <div className="statCard">
-      <span>{title}</span>
-      <strong className={green ? "greenValue" : ""}>
-        {value}
-      </strong>
-    </div>
-  );
-}
-
-function Transaction({
-  title,
-  amount,
-  negative = false,
-}: {
-  title: string;
-  amount: string;
-  negative?: boolean;
-}) {
-  return (
-    <div className="statCard">
-      <span>{title}</span>
-      <strong className={green ? "greenValue" : ""}>{value}</strong>
-    </div>
   );
 }
