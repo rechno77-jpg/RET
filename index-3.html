@@ -1,0 +1,1333 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070706">
+<title>RET — Digital Capital Ecosystem</title>
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Inter,Tahoma,Arial,sans-serif;
+  color:#f6f1df;
+  background:
+    radial-gradient(900px 500px at 82% -10%,rgba(255,202,70,.16),transparent 60%),
+    radial-gradient(800px 520px at -10% 18%,rgba(119,83,0,.18),transparent 62%),
+    linear-gradient(180deg,#070706,#0a0907 45%,#080806);
+  min-height:100vh;
+}
+:root{
+  --gold:#f7c956;
+  --gold2:#fff0a1;
+  --gold3:#b87a08;
+  --ink:#090806;
+  --card:rgba(20,18,12,.72);
+  --card2:rgba(14,13,10,.92);
+  --line:rgba(247,201,86,.16);
+  --muted:#aaa38e;
+  --soft:#d8cfb6;
+  --green:#5fe0a1;
+  --red:#ff8e85;
+  --violet:#a58bff;
+}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(1180px,92%);margin:auto}
+.glass{
+  background:linear-gradient(180deg,rgba(29,25,15,.78),rgba(15,14,10,.82));
+  border:1px solid var(--line);
+  box-shadow:0 24px 70px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.025);
+  backdrop-filter:blur(20px);
+}
+.top{
+  position:sticky;top:0;z-index:70;
+  background:rgba(7,7,6,.78);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav{height:74px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;font-size:22px;letter-spacing:.4px}
+.logo{
+  width:42px;height:42px;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:11px;font-weight:1000;color:#3c2900;
+  background:radial-gradient(circle at 30% 25%,#fff8bf 0,#f7d56f 20%,#d99b18 52%,#6f4400 78%,#d49a1b 100%);
+  border:2px solid #ffe58d;
+  box-shadow:inset 0 0 12px #fff9c388,0 0 25px #eab13033;
+}
+.links{display:flex;gap:6px;align-items:center}
+.links a{padding:10px 12px;border-radius:12px;color:#bdb49b;font-size:14px}
+.links a:hover,.links a.active{background:rgba(247,201,86,.09);color:#ffe89a}
+.pill{
+  border:1px solid rgba(247,201,86,.24);
+  background:linear-gradient(135deg,#fff2a8,#e6a51a 65%,#9c6200);
+  color:#2e2000;font-weight:900;
+  padding:12px 17px;border-radius:14px;
+  box-shadow:0 10px 30px rgba(231,170,30,.17);
+}
+main{padding-bottom:100px}
+.view{display:none;animation:fade .25s ease}
+.view.active{display:block}
+@keyframes fade{from{opacity:.18;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.hero{
+  min-height:82vh;
+  display:grid;grid-template-columns:1.05fr .95fr;
+  align-items:center;gap:48px;padding:58px 0 34px;
+}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(247,201,86,.28);
+  color:#efd979;background:rgba(247,201,86,.07);
+  font-size:13px;
+}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 15px var(--gold)}
+h1{font-size:clamp(48px,6.3vw,82px);line-height:1.02;letter-spacing:-2.6px;margin:18px 0}
+.grad{background:linear-gradient(90deg,#fff8ce 0,#f9cb56 45%,#fff0a3 80%);-webkit-background-clip:text;color:transparent}
+.lead{font-size:18px;line-height:1.95;color:#bcb39b;max-width:710px}
+.heroActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+.ghost{padding:12px 17px;border-radius:14px;border:1px solid var(--line);background:#ffffff06;color:#ede5cd}
+.trustline{display:flex;gap:18px;flex-wrap:wrap;margin-top:24px;color:#8f8772;font-size:12px}
+.trustline span{display:flex;gap:7px;align-items:center}
+
+.visual{position:relative;min-height:440px;display:grid;place-items:center}
+.orbit{position:absolute;border:1px solid rgba(247,201,86,.19);border-radius:50%;width:340px;height:340px;animation:spin 22s linear infinite}
+.orbit:before,.orbit:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--gold)}
+.orbit:before{top:18px;left:72px} .orbit:after{right:0;top:165px}
+.orbit2{width:415px;height:415px;border-style:dashed;animation-direction:reverse;opacity:.55}
+.coin{
+  width:260px;aspect-ratio:1;border-radius:50%;
+  position:relative;display:grid;place-items:center;
+  background:
+    radial-gradient(circle at 32% 25%,#fff8bf 0,#f9d973 18%,#e5ab2c 43%,#8a5600 68%,#3d2600 82%,#bd861c 100%);
+  border:5px double #ffe894;
+  box-shadow:
+    inset 22px 20px 40px rgba(255,247,176,.26),
+    inset -22px -24px 42px rgba(63,36,0,.72),
+    0 0 100px rgba(232,169,30,.25);
+  animation:float 4.2s ease-in-out infinite;
+}
+.coin:before{content:"";position:absolute;inset:15px;border-radius:50%;border:2px dashed rgba(74,46,0,.68)}
+.coin:after{content:"RET";font-size:68px;font-weight:1000;letter-spacing:-6px;color:#4a3000;text-shadow:0 2px 0 #fff0a3,0 -1px 0 #6f4500}
+.coinMark{position:absolute;bottom:48px;font-size:11px;font-weight:900;letter-spacing:3px;color:#5b3c00}
+@keyframes float{50%{transform:translateY(-12px) rotateY(8deg) rotateX(2deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+.card{border-radius:22px;padding:21px}
+.metric .label,.label{font-size:12px;color:#9d947d}
+.metric .num{font-size:28px;font-weight:900;margin:8px 0 4px}
+.mini{font-size:12px;color:#8c846e;line-height:1.7}
+.section{padding:58px 0}
+.sectionTitle{font-size:34px;margin:0 0 8px}
+.sub{color:#a8a08a;line-height:1.8}
+.featureGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.feature{min-height:180px}
+.iconBubble{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:rgba(247,201,86,.08);border:1px solid rgba(247,201,86,.18);color:#f3d66f;font-size:20px;margin-bottom:17px}
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+.roadStep{position:relative;padding-top:30px}
+.roadStep:before{content:"";position:absolute;right:0;top:0;width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--gold)}
+.roadStep:after{content:"";position:absolute;right:14px;left:-14px;top:4px;height:1px;background:linear-gradient(90deg,transparent,var(--line))}
+.roadStep:last-child:after{display:none}
+.roadStep b{color:#efd36d}
+
+.pagehead{padding:44px 0 16px}
+.pagehead h2{font-size:36px;margin:0 0 8px}
+.panel2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.panel3{display:grid;grid-template-columns:1.3fr .7fr .7fr;gap:16px}
+.row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.status{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:9px;background:rgba(247,201,86,.08);color:#edd26f;border:1px solid rgba(247,201,86,.14);font-size:11px}
+.good{color:var(--green)}
+.bad{color:var(--red)}
+
+.chartCard{min-height:300px}
+.chartTop{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:18px}
+.chartVal{font-size:36px;font-weight:900}
+.chart{height:200px;display:flex;align-items:flex-end;gap:8px;position:relative;padding-top:20px}
+.chart:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to top,transparent 0,transparent 39px,rgba(255,255,255,.04) 40px)}
+.bar{flex:1;border-radius:8px 8px 2px 2px;background:linear-gradient(180deg,#ffe783,#c98c13);box-shadow:0 0 16px rgba(247,201,86,.08);position:relative}
+
+.profitLayout{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+.profitHero{text-align:center;padding:34px;position:relative;overflow:hidden}
+.profitHero:before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(247,201,86,.1);filter:blur(25px);top:-150px;left:50%;transform:translateX(-50%)}
+.profitCoin{width:120px;height:120px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;font-size:28px;font-weight:1000;color:#4a3000;background:radial-gradient(circle at 30% 25%,#fff8bc,#efbe42 52%,#815100);border:3px solid #ffe583;box-shadow:0 0 48px rgba(247,201,86,.3)}
+.profitNum{font-size:48px;font-weight:1000;color:#ffe47e;margin:10px 0}
+.timer{font-size:28px;font-weight:900;direction:ltr;letter-spacing:2px;color:#f7e6a7;margin:14px 0}
+.progress{height:9px;background:#ffffff0a;border-radius:999px;overflow:hidden;margin:14px 0}
+.progress i{display:block;height:100%;width:72%;background:linear-gradient(90deg,#a96c00,#ffe37b);border-radius:999px}
+.goldBtn{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,#fff2a7,#edae24 62%,#9f6500);font-weight:1000;color:#2c1e00;box-shadow:0 10px 30px rgba(231,170,30,.14)}
+.goldBtn:disabled{opacity:.5;cursor:default}
+.history{margin-top:16px}
+
+.depositHero{display:grid;grid-template-columns:1fr .9fr;gap:16px}
+.walletCard{padding:26px}
+.network{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(165,139,255,.3);background:rgba(165,139,255,.08);color:#cdbfff;padding:7px 10px;border-radius:10px;font-size:11px}
+.address{direction:ltr;text-align:left;word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0c0b08;border:1px dashed rgba(247,201,86,.34);border-radius:14px;padding:15px;color:#ffe486;margin:12px 0}
+.qrFake{width:200px;aspect-ratio:1;margin:auto;border-radius:18px;padding:15px;background:#f7f0d5;display:grid;grid-template-columns:repeat(11,1fr);gap:2px;box-shadow:0 0 30px rgba(247,201,86,.13)}
+.qrFake span{background:#12100a;border-radius:1px}
+.qrFake span:nth-child(3n){opacity:.08} .qrFake span:nth-child(5n+2){opacity:.08} .qrFake span:nth-child(7n+1){opacity:.08}
+.input{width:100%;padding:13px 14px;border-radius:13px;border:1px solid var(--line);background:#0e0d09;color:#f8efcf;outline:none;margin:8px 0}
+.input:focus{border-color:rgba(247,201,86,.42);box-shadow:0 0 0 3px rgba(247,201,86,.06)}
+.notice{margin-top:14px;padding:13px 14px;border-radius:13px;border:1px solid rgba(255,255,255,.07);background:#ffffff05;color:#8f8773;font-size:12px;line-height:1.8}
+
+.withdrawFlow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.flow{padding:13px;border-radius:13px;background:#ffffff04;border:1px solid var(--line);font-size:12px;color:#aaa18a}
+.flow b{display:block;color:#efd16d;margin-bottom:5px}
+
+.refCode{font-size:28px;font-weight:1000;letter-spacing:3px;text-align:center;padding:18px;border-radius:14px;background:#0d0c08;border:1px dashed rgba(247,201,86,.35);color:#ffe485;margin:12px 0}
+
+.bottom{display:none}
+@media(max-width:860px){
+  .links{display:none} .top .pill{display:none}
+  .hero{grid-template-columns:1fr;min-height:auto;padding-top:38px}
+  .visual{min-height:320px}
+  .coin{width:205px} .coin:after{font-size:52px}
+  .orbit{width:270px;height:270px} .orbit2{width:330px;height:330px}
+  .metrics{grid-template-columns:1fr 1fr}
+  .featureGrid,.roadmap,.panel2,.panel3,.profitLayout,.depositHero{grid-template-columns:1fr}
+  .roadStep:after{display:none}
+  h1{font-size:47px} .sectionTitle{font-size:29px} .pagehead h2{font-size:31px}
+  .bottom{
+    display:grid;grid-template-columns:repeat(5,1fr);
+    position:fixed;left:0;right:0;bottom:0;z-index:80;
+    background:rgba(10,9,7,.94);backdrop-filter:blur(18px);
+    border-top:1px solid var(--line);
+    padding:7px 5px calc(7px + env(safe-area-inset-bottom));
+  }
+  .bottom a{text-align:center;color:#908874;font-size:10px;padding:7px 2px;border-radius:10px}
+  .bottom a b{display:block;font-size:17px;margin-bottom:3px}
+  .bottom a.active{background:rgba(247,201,86,.08);color:#f4d56d}
+}
+
+/* === RET MAX VISUAL UPGRADE === */
+body{
+  background:
+    radial-gradient(900px 560px at 80% -10%,rgba(255,204,74,.20),transparent 60%),
+    radial-gradient(700px 480px at 15% 8%,rgba(122,86,0,.18),transparent 58%),
+    radial-gradient(1200px 900px at 50% 105%,rgba(87,54,0,.16),transparent 64%),
+    linear-gradient(180deg,#050504,#090806 46%,#050504);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.72),transparent 90%);
+}
+body:after{
+  content:"";
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 25%,rgba(247,201,86,.08) 0 1px,transparent 1.7px),
+    radial-gradient(circle at 75% 40%,rgba(255,239,158,.07) 0 1px,transparent 1.8px),
+    radial-gradient(circle at 45% 80%,rgba(247,201,86,.05) 0 1.2px,transparent 2px);
+  background-size:110px 110px,150px 150px,190px 190px;
+  animation:driftBg 24s linear infinite;
+}
+@keyframes driftBg{to{transform:translate3d(24px,-18px,0)}}
+.nav{height:78px}
+.brand{font-size:24px;letter-spacing:.8px}
+.logo{
+  width:46px;height:46px;
+  box-shadow:inset 0 0 14px #fff7b080,0 0 34px #f1b72f35,0 0 0 5px rgba(247,201,86,.03);
+}
+.links{gap:2px}
+.links a{font-size:13px;padding:10px 11px}
+.links a:hover{transform:translateY(-1px)}
+.pill,.ghost,.goldBtn{transition:.22s ease}
+.pill:hover,.goldBtn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+.ghost:hover{background:rgba(247,201,86,.07);border-color:rgba(247,201,86,.28)}
+.hero{
+  min-height:88vh;
+  gap:34px;
+  position:relative;
+}
+.hero:before{
+  content:"RET";
+  position:absolute;left:0;bottom:0;
+  font-size:clamp(120px,22vw,300px);
+  line-height:.8;font-weight:1000;
+  color:rgba(255,255,255,.012);
+  letter-spacing:-14px;
+  pointer-events:none;
+}
+.heroStats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;max-width:650px
+}
+.heroStat{
+  padding:12px 14px;border-radius:16px;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+  border:1px solid rgba(247,201,86,.10)
+}
+.heroStat b{display:block;font-size:18px;color:#f7df85;margin-bottom:2px}
+.visual{
+  min-height:510px;
+  perspective:900px;
+}
+.orbit3{
+  width:470px;height:470px;opacity:.24;
+  border:1px dotted rgba(247,201,86,.25);
+  animation-duration:38s
+}
+.coin{
+  width:285px;
+  transform-style:preserve-3d;
+  box-shadow:
+    inset 24px 22px 44px rgba(255,247,176,.28),
+    inset -25px -28px 46px rgba(63,36,0,.78),
+    0 0 115px rgba(232,169,30,.32),
+    0 34px 70px rgba(0,0,0,.48);
+}
+.coin:before{
+  box-shadow:inset 0 0 0 5px rgba(255,230,135,.08);
+}
+.coinEdge{
+  position:absolute;inset:28px;border-radius:50%;
+  border:1px solid rgba(73,43,0,.45);
+  box-shadow:inset 0 0 28px rgba(255,239,154,.14)
+}
+.coinSmall{
+  position:absolute;top:52px;font-size:10px;letter-spacing:4px;
+  color:#624000;font-weight:1000
+}
+.coinStars{
+  position:absolute;bottom:68px;color:#6a4300;font-size:12px;letter-spacing:6px;font-weight:1000
+}
+.visualCard{
+  position:absolute;min-width:170px;padding:14px 16px;border-radius:16px;
+  background:rgba(16,14,9,.78);border:1px solid rgba(247,201,86,.14);
+  backdrop-filter:blur(14px);box-shadow:0 18px 35px rgba(0,0,0,.25)
+}
+.visualCard b{display:block;color:#ffe58c;margin-bottom:4px}
+.visualCard.one{right:0;top:75px;animation:floatMini 4s ease-in-out infinite}
+.visualCard.two{left:0;bottom:70px;animation:floatMini 5s ease-in-out infinite reverse}
+@keyframes floatMini{50%{transform:translateY(-8px)}}
+.ticker{
+  overflow:hidden;border-block:1px solid var(--line);
+  background:linear-gradient(90deg,transparent,rgba(247,201,86,.04),transparent);
+  padding:11px 0;margin:6px 0 18px
+}
+.tickerTrack{display:flex;gap:38px;width:max-content;animation:ticker 28s linear infinite}
+.tickerItem{font-size:12px;color:#b8ad91;white-space:nowrap}
+.tickerItem b{color:#f1d472;margin-left:6px}
+@keyframes ticker{to{transform:translateX(45%)}}
+.metrics{gap:12px}
+.card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.card:hover{transform:translateY(-3px);border-color:rgba(247,201,86,.25);box-shadow:0 26px 75px rgba(0,0,0,.32)}
+.metric{position:relative;overflow:hidden}
+.metric:after{
+  content:"";position:absolute;width:100px;height:100px;border-radius:50%;
+  background:rgba(247,201,86,.05);filter:blur(4px);left:-35px;bottom:-35px
+}
+.section{padding:68px 0}
+.sectionTop{display:flex;justify-content:space-between;gap:20px;align-items:end}
+.sectionTag{font-size:11px;color:#d8bf62;letter-spacing:2px;text-transform:uppercase}
+.featureGrid{grid-template-columns:repeat(4,1fr)}
+.feature:nth-child(1){grid-column:span 2}
+.feature:nth-child(6){grid-column:span 2}
+.feature{position:relative;overflow:hidden}
+.feature:after{
+  content:"";position:absolute;width:140px;height:140px;border-radius:50%;
+  background:rgba(247,201,86,.05);right:-60px;bottom:-60px
+}
+.securityGrid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:20px}
+.securityPanel{min-height:260px}
+.securityBadge{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;
+  background:rgba(95,224,161,.07);border:1px solid rgba(95,224,161,.15);color:#8deab9;font-size:11px
+}
+.ringSet{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.ringMini{
+  width:92px;height:92px;border-radius:50%;
+  display:grid;place-items:center;
+  background:conic-gradient(#f6cf63 var(--p),rgba(255,255,255,.05) 0);
+  position:relative
+}
+.ringMini:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#0d0c09}
+.ringMini span{position:relative;z-index:1;font-weight:900;color:#f1d57e;font-size:14px}
+.roadmap{grid-template-columns:repeat(4,1fr);position:relative}
+.roadmap:before{
+  content:"";position:absolute;right:8%;left:8%;top:4px;height:1px;
+  background:linear-gradient(90deg,rgba(247,201,86,.05),rgba(247,201,86,.35),rgba(247,201,86,.05))
+}
+.roadStep{min-height:180px}
+.roadStep .phase{font-size:11px;color:#807763;margin-bottom:8px}
+.roadStep .lock{float:left;color:#7a715d}
+.pagehead{padding-top:52px}
+.panel3{grid-template-columns:1.55fr .7fr .75fr}
+.quickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.quickAction{padding:16px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+.quickAction b{display:block;color:#f2d26d;margin-bottom:4px}
+.chart{
+  height:220px;gap:6px;
+}
+.bar{transition:.2s}
+.bar:hover{filter:brightness(1.18);transform:translateY(-3px)}
+.activityGrid{display:grid;grid-template-columns:1fr .9fr;gap:16px;margin-top:16px}
+.timeline{position:relative;padding-right:18px}
+.timeline:before{content:"";position:absolute;right:4px;top:4px;bottom:4px;width:1px;background:var(--line)}
+.timelineItem{position:relative;padding:0 18px 18px 0}
+.timelineItem:before{content:"";position:absolute;right:-1px;top:4px;width:9px;height:9px;border-radius:50%;background:#f0c650;box-shadow:0 0 14px rgba(247,201,86,.45)}
+.timelineItem small{color:#7f7764}
+.profitLayout{grid-template-columns:1.1fr .9fr}
+.profitHero{min-height:520px;display:flex;flex-direction:column;justify-content:center}
+.profitRing{
+  width:260px;height:260px;border-radius:50%;margin:0 auto 12px;
+  background:conic-gradient(#ffe98a 0 72%,rgba(255,255,255,.05) 72% 100%);
+  padding:10px;display:grid;place-items:center;
+  box-shadow:0 0 60px rgba(247,201,86,.14)
+}
+.profitRingInner{
+  width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle at 50% 35%,#17130a,#0b0a07 68%);
+  border:1px solid rgba(247,201,86,.12);
+  display:flex;flex-direction:column;align-items:center;justify-content:center
+}
+.profitRing .profitCoin{width:98px;height:98px;margin-bottom:6px}
+.claimFlash{animation:claimFlash .55s ease}
+@keyframes claimFlash{
+  50%{box-shadow:0 0 0 14px rgba(247,201,86,.05),0 0 90px rgba(247,201,86,.35)}
+}
+.statStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.statStrip div{padding:11px;border-radius:12px;background:#ffffff04;border:1px solid var(--line);font-size:11px;color:#928974}
+.statStrip b{display:block;font-size:16px;color:#ead176;margin-top:3px}
+.depositHero{grid-template-columns:1.05fr .95fr}
+.qrWrap{display:grid;place-items:center;min-height:350px}
+.networkSelector{display:flex;gap:8px;margin:12px 0}
+.networkOpt{padding:9px 11px;border-radius:11px;border:1px solid var(--line);background:#ffffff04;color:#8d846f;font-size:11px}
+.networkOpt.active{color:#d6c5ff;border-color:rgba(165,139,255,.32);background:rgba(165,139,255,.08)}
+.stepper{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px
+}
+.step{
+  position:relative;padding:14px;border-radius:14px;border:1px solid var(--line);background:#ffffff03
+}
+.step b{display:block;color:#efd06d;margin-bottom:4px}
+.step.done:before,.step.active:before{
+  content:"";position:absolute;top:-1px;right:-1px;left:-1px;height:2px;border-radius:14px 14px 0 0;background:#e6b13d
+}
+.step.done{opacity:.72}
+.withdrawFlow{grid-template-columns:repeat(4,1fr)}
+.statusTrack{
+  display:flex;align-items:center;gap:0;margin:18px 0
+}
+.statusNode{flex:1;text-align:center;position:relative}
+.statusNode:before{
+  content:"";position:absolute;top:12px;right:50%;left:-50%;height:2px;background:rgba(247,201,86,.11);z-index:0
+}
+.statusNode:first-child:before{display:none}
+.statusNode i{
+  width:25px;height:25px;border-radius:50%;display:grid;place-items:center;margin:auto;
+  position:relative;z-index:1;background:#13110c;border:1px solid var(--line);font-style:normal;font-size:10px;color:#8e856f
+}
+.statusNode.active i,.statusNode.done i{background:#e7b33e;color:#2d1e00;border-color:#ffd967}
+.statusNode span{display:block;margin-top:7px;font-size:10px;color:#8b826d}
+.refGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.rankCard{text-align:center}
+.avatar{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;margin:0 auto 8px;background:linear-gradient(135deg,#fff0a0,#b57b10);color:#342100;font-weight:1000}
+.footerMega{
+  margin-top:58px;border-top:1px solid var(--line);padding:34px 0 95px;color:#857d68
+}
+.footerGrid{display:grid;grid-template-columns:1.2fr repeat(3,.6fr);gap:24px}
+.footerGrid b{color:#d9c98d}
+.footerGrid a{display:block;margin-top:8px;font-size:12px}
+.toast{
+  position:fixed;left:50%;bottom:92px;transform:translateX(-50%) translateY(20px);
+  z-index:120;background:#17140d;border:1px solid rgba(247,201,86,.22);color:#f5dfa0;
+  padding:11px 15px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.reveal{opacity:0;transform:translateY(12px);transition:.55s ease}
+.reveal.show{opacity:1;transform:none}
+@media(max-width:1000px){
+  .featureGrid{grid-template-columns:repeat(2,1fr)}
+  .feature:nth-child(1),.feature:nth-child(6){grid-column:auto}
+  .securityGrid,.activityGrid{grid-template-columns:1fr}
+  .quickGrid,.refGrid{grid-template-columns:repeat(2,1fr)}
+  .footerGrid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:860px){
+  .heroStats,.statStrip{grid-template-columns:1fr 1fr}
+  .visual{min-height:410px}
+  .visualCard.one{right:0;top:38px}.visualCard.two{left:0;bottom:28px}
+  .orbit3{width:360px;height:360px}
+  .stepper{grid-template-columns:1fr 1fr}
+  .withdrawFlow{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .heroStats,.quickGrid,.refGrid,.statStrip,.footerGrid{grid-template-columns:1fr}
+  .featureGrid{grid-template-columns:1fr}
+  .metrics{grid-template-columns:1fr 1fr}
+  .visualCard{min-width:140px;padding:10px 12px;font-size:11px}
+  .coin{width:225px}
+  .orbit3{width:310px;height:310px}
+  .profitRing{width:230px;height:230px}
+}
+
+
+/* === MOBILE HORIZONTAL STABILITY FIX === */
+html,body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden !important;
+  overscroll-behavior-x:none;
+}
+body{
+  position:relative;
+}
+.wrap{
+  width:min(1180px,92%);
+  max-width:100%;
+}
+main,.view,.section,.hero,.visual,.metrics,.featureGrid,.panel2,.panel3,.securityGrid,.activityGrid,.profitLayout,.depositHero,.roadmap,.quickGrid,.refGrid,.footerGrid{
+  max-width:100%;
+  min-width:0;
+}
+*{
+  min-width:0;
+}
+.ticker{
+  max-width:100%;
+  overflow:hidden !important;
+}
+.tickerTrack{
+  will-change:transform;
+}
+.address,.input,.row,.card,.feature,.visualCard{
+  max-width:100%;
+}
+img,svg,canvas,video{
+  max-width:100%;
+  height:auto;
+}
+@media(max-width:860px){
+  .wrap{width:94%;max-width:94%}
+  .hero{overflow:hidden}
+  .visual{overflow:hidden}
+  .visualCard.one{right:8px}
+  .visualCard.two{left:8px}
+  .orbit,.orbit2,.orbit3{
+    left:50%;
+    right:auto;
+    transform:translateX(-50%);
+    transform-origin:center center;
+  }
+  .orbit{animation:spinCentered 22s linear infinite}
+  .orbit2{animation:spinCenteredReverse 28s linear infinite}
+  .orbit3{animation:spinCentered 38s linear infinite}
+  .featureGrid{overflow:hidden}
+  .bottom{overflow:hidden}
+}
+@keyframes spinCentered{
+  from{transform:translateX(-50%) rotate(0deg)}
+  to{transform:translateX(-50%) rotate(360deg)}
+}
+@keyframes spinCenteredReverse{
+  from{transform:translateX(-50%) rotate(360deg)}
+  to{transform:translateX(-50%) rotate(0deg)}
+}
+
+
+/* === RET MOBILE VISUAL HARMONY === */
+@media(max-width:860px){
+  body{
+    background:
+      radial-gradient(520px 320px at 80% 0%,rgba(247,201,86,.12),transparent 65%),
+      linear-gradient(180deg,#050504 0%,#080706 48%,#070605 100%);
+  }
+  .glass,.card,.quickAction,.flow,.step{
+    background:linear-gradient(180deg,rgba(20,18,12,.88),rgba(11,10,8,.94)) !important;
+    border-color:rgba(247,201,86,.18) !important;
+    box-shadow:0 16px 44px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.018);
+  }
+  .activityGrid,.securityGrid,.panel2,.panel3,.profitLayout,.depositHero{gap:12px}
+  .activityGrid .card,.securityGrid .card,.panel2 .card,.panel3 .card{border-radius:22px}
+  .timelineItem b,.activityGrid h3,.securityGrid h3,.panel2 h3,.panel3 h3{color:#f6efd9}
+  .timelineItem small,.mini,.sub,.row span:first-child{color:#9e957f}
+  .bottom{
+    left:10px !important;right:10px !important;bottom:10px !important;
+    border:1px solid rgba(247,201,86,.16) !important;border-radius:20px !important;
+    background:rgba(12,11,8,.94) !important;
+    box-shadow:0 18px 50px rgba(0,0,0,.42) !important;
+    padding:7px 6px calc(7px + env(safe-area-inset-bottom)) !important;
+  }
+  .bottom a{color:#887f6c !important;border-radius:14px !important;transition:.2s ease}
+  .bottom a.active{
+    color:#f7d86e !important;
+    background:linear-gradient(180deg,rgba(247,201,86,.12),rgba(247,201,86,.05)) !important;
+    box-shadow:inset 0 0 0 1px rgba(247,201,86,.08)
+  }
+  .footerMega{padding-bottom:125px;background:linear-gradient(180deg,transparent,rgba(247,201,86,.015))}
+  .section{padding-top:48px;padding-bottom:48px}
+  .pagehead{padding-top:34px}
+  .pagehead h2,.sectionTitle{color:#fff4cf}
+  .sectionTag{color:#d9bc5c}
+  .status{background:rgba(247,201,86,.07);border-color:rgba(247,201,86,.14);color:#e7cd73}
+  .chartCard,.activityGrid .card,.securityGrid .card{overflow:hidden}
+  .top{border-bottom-color:rgba(247,201,86,.09)}
+}
+
+
+/* =========================================================
+   RET FINAL REFINEMENT — unified spacing, hierarchy & mobile
+   ========================================================= */
+:root{
+  --ret-bg:#070604;
+  --ret-panel:#12100b;
+  --ret-panel-2:#0d0c09;
+  --ret-gold:#f4c952;
+  --ret-gold-soft:#e5c975;
+  --ret-text:#f7f0d9;
+  --ret-muted:#9d947e;
+  --ret-radius:22px;
+  --ret-gap:16px;
+}
+
+/* Global rhythm */
+.wrap{width:min(1180px,92%);margin-inline:auto}
+.view>.wrap{padding-top:6px}
+.section{padding-block:56px}
+.pagehead{padding:40px 0 20px}
+.pagehead h2,.sectionTitle{letter-spacing:-.7px}
+.sectionTitle{margin-bottom:10px}
+.sub{max-width:760px}
+.card{padding:22px;border-radius:var(--ret-radius)}
+.metric{min-height:132px;display:flex;flex-direction:column;justify-content:center}
+.metric .num{line-height:1.15}
+.row{align-items:center;min-height:48px}
+.row span:last-child{font-weight:700}
+
+/* Keep mixed Persian/Latin values readable */
+.num,.chartVal,.profitNum,.timer,.address,
+.row span:last-child,.good,.bad,.status,.network,.refCode{
+  unicode-bidi:isolate;
+}
+.num,.chartVal,.profitNum,.timer,.address{direction:ltr}
+.good,.bad{direction:ltr;display:inline-block}
+
+/* Header / navigation */
+.top{background:rgba(7,6,4,.88)}
+.nav{height:74px}
+.links a{white-space:nowrap}
+.brand{flex-shrink:0}
+
+/* Home */
+.hero{padding-top:44px;padding-bottom:36px}
+.hero .lead{max-width:650px}
+.heroActions{margin-top:24px}
+.trustline{margin-top:20px}
+.visualCard{z-index:3}
+.coin{z-index:2}
+.ticker{margin-top:0}
+.sectionTop{align-items:flex-end}
+.sectionTop>div{min-width:0}
+
+/* Festival cards */
+#festivals .featureGrid{align-items:stretch}
+#festivals .feature{
+  display:flex;
+  flex-direction:column;
+}
+#festivals .feature .heroActions{margin-top:auto}
+#festivals .feature .row{margin-top:auto}
+
+/* Live market */
+#market .metrics{margin-top:22px!important}
+#market .metric .label{font-size:13px}
+#market .metric .num{font-size:27px}
+#marketTable .row span:first-child b{color:#f5d66d}
+
+/* Dashboard */
+#dashboard .metrics{margin-top:4px}
+#dashboard .quickGrid{margin-top:14px}
+#dashboard .panel3.section{padding-top:16px;padding-bottom:12px}
+#dashboard .activityGrid{margin-top:4px}
+#dashboard .chartCard{min-height:330px}
+#dashboard .chart{height:230px}
+.quickAction{
+  min-height:92px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.activityGrid .card{min-height:100%}
+.timelineItem:last-child{padding-bottom:0}
+
+/* Profit */
+#profit .profitLayout{align-items:stretch}
+#profit .profitHero{min-height:500px}
+#profit .profitRing{flex:0 0 auto}
+#profit .history{margin-top:20px}
+
+/* Deposit */
+#deposit .depositHero{align-items:stretch}
+#deposit .walletCard,#deposit .depositHero>.card{min-height:100%}
+#deposit .address{font-size:13px;line-height:1.7}
+#deposit .qrFake{max-width:190px}
+#deposit .stepper{margin-top:16px}
+
+/* Withdraw */
+#withdraw .panel2{align-items:start}
+#withdraw .statusTrack{margin:18px 0 22px}
+#withdraw .withdrawFlow{margin-top:16px}
+#withdraw .flow{min-height:94px}
+
+/* Referrals */
+#referrals .panel2{align-items:stretch}
+#referrals .refCode{direction:ltr}
+#referrals .refGrid{margin-top:16px}
+.rankCard{min-height:160px;display:flex;flex-direction:column;justify-content:center}
+
+/* Footer */
+.footerMega{margin-top:34px}
+.footerGrid{align-items:start}
+.footerGrid>div:first-child .sub{max-width:360px}
+
+/* Unified focus */
+button:focus-visible,a:focus-visible,input:focus-visible{
+  outline:2px solid rgba(247,201,86,.72);
+  outline-offset:3px;
+}
+
+/* Mobile: force every major block into a clean single column */
+@media(max-width:860px){
+  html,body{overflow-x:hidden!important;width:100%;max-width:100%}
+  .wrap{width:calc(100% - 28px);max-width:calc(100% - 28px)}
+  .section{padding-block:40px}
+  .pagehead{padding:28px 0 14px}
+  .card{padding:18px;border-radius:20px}
+  .hero{
+    grid-template-columns:1fr!important;
+    gap:22px;
+    padding-top:28px;
+    padding-bottom:18px;
+  }
+  .hero h1{font-size:clamp(40px,12vw,54px);line-height:1.12}
+  .hero .lead{font-size:16px;line-height:1.95}
+  .heroActions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  .heroActions a,.heroActions button{text-align:center;width:100%}
+  .trustline{display:grid;grid-template-columns:1fr;gap:8px}
+  .visual{min-height:360px!important}
+  .visualCard{min-width:132px;max-width:150px}
+  .visualCard.one{right:4px!important;top:44px!important}
+  .visualCard.two{left:4px!important;bottom:30px!important}
+
+  .metrics{grid-template-columns:1fr 1fr!important;gap:10px}
+  .metric{min-height:118px;padding:16px}
+  .metric .num{font-size:23px}
+
+  .sectionTop{display:block}
+  .sectionTop>.status{margin-top:12px}
+  .featureGrid,
+  #festivals .featureGrid,
+  .roadmap,.panel2,.panel3,.profitLayout,.depositHero,
+  .securityGrid,.activityGrid,.footerGrid{
+    grid-template-columns:1fr!important;
+  }
+
+  /* inline grid-column values were causing oversized festival cards on mobile */
+  #festivals .feature,
+  #festivals .feature[style]{
+    grid-column:auto!important;
+    min-height:auto!important;
+  }
+
+  .quickGrid,.refGrid{grid-template-columns:1fr 1fr!important}
+  .statStrip{grid-template-columns:repeat(3,1fr)!important}
+  .stepper{grid-template-columns:1fr 1fr!important}
+  .withdrawFlow{grid-template-columns:1fr 1fr!important}
+
+  #dashboard .panel3.section{padding-top:12px}
+  #dashboard .chartCard{min-height:280px}
+  #dashboard .chart{height:190px}
+  #dashboard .activityGrid{gap:12px}
+  .timelineItem{padding-bottom:16px}
+
+  #profit .profitHero{min-height:auto;padding-block:26px}
+  #profit .profitRing{width:220px;height:220px}
+  #profit .profitNum{font-size:38px}
+
+  #deposit .qrFake{width:176px}
+  #deposit .address{font-size:12px}
+  #withdraw .statusTrack{overflow:visible}
+  .statusNode span{font-size:9px}
+
+  .footerMega{padding-bottom:120px}
+  .bottom{
+    width:auto!important;
+    max-width:none!important;
+    left:10px!important;
+    right:10px!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  }
+  .bottom a{min-width:0!important;overflow:hidden}
+  .bottom a b{font-size:16px}
+
+  /* avoid content hiding behind bottom nav */
+  main{padding-bottom:110px!important}
+}
+
+@media(max-width:430px){
+  .wrap{width:calc(100% - 22px);max-width:calc(100% - 22px)}
+  .heroActions{grid-template-columns:1fr}
+  .metrics{grid-template-columns:1fr 1fr!important}
+  .quickGrid,.refGrid,.stepper,.withdrawFlow{grid-template-columns:1fr!important}
+  .statStrip{grid-template-columns:1fr!important}
+  .visual{min-height:335px!important}
+  .coin{width:210px!important}
+  .orbit{width:260px!important;height:260px!important}
+  .orbit2{width:305px!important;height:305px!important}
+  .orbit3{width:325px!important;height:325px!important}
+  .visualCard{font-size:10px;min-width:120px;max-width:132px;padding:9px 10px}
+  #market .metric .num{font-size:21px}
+}
+
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="#home"><span class="logo">RET</span>RET</a>
+    <nav class="links">
+      <a href="#home">بازار RET</a>
+      <a href="#dashboard">داشبورد</a>
+      <a href="#profit">سود روزانه</a>
+      <a href="#deposit">واریز</a>
+      <a href="#withdraw">برداشت</a>
+      <a href="#referrals">دعوت</a>
+    </nav>
+    <a class="pill" href="#dashboard">ورود به پنل</a>
+  </div>
+</header>
+
+<main>
+
+<section id="home" class="view active">
+  <div class="wrap">
+
+    <div class="hero" style="min-height:auto;padding-bottom:24px">
+      <div>
+        <span class="eyebrow"><i class="dot"></i> RET Festivals & Live Crypto Market</span>
+        <h1>جشنواره‌های <span class="grad">RET</span><br>و قیمت زنده کریپتو</h1>
+        <p class="lead">صفحه هوم RET حالا روی دو موضوع اصلی تمرکز دارد: جشنواره‌ها و رویدادهای ویژه RET، و قیمت به‌روز رمزارزهای مهم بازار.</p>
+        <div class="heroActions">
+          <a class="pill" href="#festivals">جشنواره‌های RET</a>
+          <a class="ghost" href="#market">قیمت لحظه‌ای بازار</a>
+        </div>
+        <div class="trustline">
+          <span>◈ بروزرسانی خودکار</span>
+          <span>◎ BTC / ETH / SOL</span>
+          <span>◆ رویدادهای ویژه RET</span>
+        </div>
+      </div>
+      <div class="visual" style="min-height:420px">
+        <div class="orbit"></div><div class="orbit orbit2"></div><div class="orbit orbit3"></div>
+        <div class="visualCard one"><span class="label">Market</span><b id="marketStatus">در حال اتصال...</b><span class="mini">Live Crypto Feed</span></div>
+        <div class="visualCard two"><span class="label">RET Festival</span><b>Golden Week</b><span class="mini">رویداد ویژه کاربران RET</span></div>
+        <div class="coin"><span class="coinEdge"></span><span class="coinSmall">RET ECOSYSTEM</span><span class="coinMark">DIGITAL ASSET</span><span class="coinStars">◆ ◆ ◆</span></div>
+      </div>
+    </div>
+
+    <div class="ticker"><div class="tickerTrack" id="liveTicker">
+      <span class="tickerItem"><b>BTC</b> Loading...</span>
+      <span class="tickerItem"><b>ETH</b> Loading...</span>
+      <span class="tickerItem"><b>SOL</b> Loading...</span>
+      <span class="tickerItem"><b>BNB</b> Loading...</span>
+      <span class="tickerItem"><b>XRP</b> Loading...</span>
+      <span class="tickerItem"><b>DOGE</b> Loading...</span>
+    </div></div>
+
+    <div id="festivals" class="section">
+      <div class="sectionTop">
+        <div>
+          <div class="sectionTag">RET FESTIVALS</div>
+          <h2 class="sectionTitle">جشنواره‌های RET</h2>
+          <p class="sub">کمپین‌ها، رویدادها و برنامه‌های ویژه RET در صفحه اصلی.</p>
+        </div>
+        <span class="status">۳ رویداد فعال</span>
+      </div>
+
+      <div class="featureGrid" style="margin-top:24px">
+        <div class="glass card feature reveal" style="grid-column:span 2;min-height:260px">
+          <div class="iconBubble">◆</div>
+          <span class="status">SPECIAL EVENT</span>
+          <h3 style="font-size:27px;margin:14px 0 8px">RET Golden Week</h3>
+          <p class="sub">کمپین ویژه RET با مأموریت‌های روزانه، امتیاز فعالیت و جوایز دوره‌ای. شرایط و جوایز هر جشنواره در زمان شروع به‌صورت شفاف اعلام می‌شود.</p>
+          <div class="heroActions">
+            <a href="#dashboard" class="pill">ورود به پنل</a>
+            <button class="ghost" onclick="showToast('جزئیات جشنواره به‌زودی منتشر می‌شود')">جزئیات بیشتر</button>
+          </div>
+        </div>
+
+        <div class="glass card feature reveal">
+          <div class="iconBubble">◈</div>
+          <span class="status">COMMUNITY</span>
+          <h3 style="margin:14px 0 8px">Referral Festival</h3>
+          <p class="sub">جشنواره دعوت دوستان با جدول رتبه‌بندی و امتیاز فعالیت.</p>
+          <div class="row"><span>وضعیت</span><span class="good">فعال</span></div>
+        </div>
+
+        <div class="glass card feature reveal">
+          <div class="iconBubble">◎</div>
+          <span class="status">WEEKLY</span>
+          <h3 style="margin:14px 0 8px">RET Lucky Draw</h3>
+          <p class="sub">رویداد هفتگی برای کاربران واجد شرایط با قوانین مشخص.</p>
+          <div class="row"><span>دوره</span><span>هفتگی</span></div>
+        </div>
+
+        <div class="glass card feature reveal">
+          <div class="iconBubble">⌁</div>
+          <span class="status">MISSIONS</span>
+          <h3 style="margin:14px 0 8px">Mission Rewards</h3>
+          <p class="sub">ماموریت‌های داخل پلتفرم برای دریافت امتیاز و نشان‌های ویژه RET.</p>
+          <div class="row"><span>ماموریت فعال</span><span>۴</span></div>
+        </div>
+
+        <div class="glass card feature reveal" style="grid-column:span 2">
+          <div class="sectionTag">NEXT RET EVENT</div>
+          <h3 style="font-size:24px;margin:10px 0">رویداد بزرگ بعدی</h3>
+          <p class="sub">این بخش برای شمارش معکوس، معرفی جوایز، شرایط شرکت و اخبار جشنواره‌های آینده RET طراحی شده است.</p>
+          <div class="statStrip">
+            <div>شروع رویداد<b>12 روز</b></div>
+            <div>ثبت‌نام<b>Open</b></div>
+            <div>نوع رویداد<b>Special</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="market" class="section">
+      <div class="sectionTop">
+        <div>
+          <div class="sectionTag">LIVE CRYPTO MARKET</div>
+          <h2 class="sectionTitle">قیمت لحظه‌ای رمزارزها</h2>
+          <p class="sub">قیمت‌ها از منبع عمومی بازار دریافت می‌شوند و هر ۶۰ ثانیه بروزرسانی می‌شوند.</p>
+        </div>
+        <span class="status" id="lastUpdated">در حال دریافت...</span>
+      </div>
+
+      <div class="metrics" id="cryptoCards" style="margin-top:24px">
+        <div class="glass card metric"><div class="label">Bitcoin</div><div class="num">...</div><div class="mini">BTC</div></div>
+        <div class="glass card metric"><div class="label">Ethereum</div><div class="num">...</div><div class="mini">ETH</div></div>
+        <div class="glass card metric"><div class="label">Solana</div><div class="num">...</div><div class="mini">SOL</div></div>
+        <div class="glass card metric"><div class="label">BNB</div><div class="num">...</div><div class="mini">BNB</div></div>
+      </div>
+
+      <div class="panel2" style="margin-top:16px">
+        <div class="glass card reveal">
+          <div class="sectionTag">MARKET WATCH</div>
+          <h3 style="margin:8px 0 14px">دیدبان بازار</h3>
+          <div id="marketTable"><div class="row"><span>در حال بارگذاری...</span><span>—</span></div></div>
+        </div>
+
+        <div class="glass card reveal">
+          <div class="sectionTag">LIVE FEED</div>
+          <h3 style="margin:8px 0 14px">وضعیت داده بازار</h3>
+          <div class="row"><span>منبع</span><span>CoinGecko API</span></div>
+          <div class="row"><span>ارز مبنا</span><span>USD</span></div>
+          <div class="row"><span>بروزرسانی</span><span>هر ۶۰ ثانیه</span></div>
+          <div class="row"><span>وضعیت</span><span id="apiStatus" class="status">Connecting...</span></div>
+          <div class="notice">قیمت‌ها اطلاعات بازار هستند و ممکن است با قیمت یک صرافی خاص اختلاف جزئی یا تأخیر داشته باشند.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="securityGrid">
+        <div class="glass card securityPanel reveal">
+          <span class="securityBadge">● RET HOME HUB</span>
+          <h3 style="font-size:25px;margin:16px 0 8px">هوم RET حالا زنده‌تر و کاربردی‌تر است</h3>
+          <p class="sub">واریز، برداشت و سود از هوم حذف نشده‌اند؛ فقط به صفحات تخصصی خودشان منتقل شده‌اند تا صفحه اول بیشتر شبیه یک پورتال واقعی کریپتو و رویداد باشد.</p>
+        </div>
+        <div class="glass card reveal">
+          <b>دسترسی سریع</b>
+          <div class="row"><a href="#dashboard">داشبورد</a><span>↗</span></div>
+          <div class="row"><a href="#profit">سود روزانه</a><span>↗</span></div>
+          <div class="row"><a href="#deposit">واریز USDT</a><span>↗</span></div>
+          <div class="row"><a href="#withdraw">برداشت</a><span>↗</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="dashboard" class="view">
+  <div class="wrap">
+    <div class="pagehead"><h2>داشبورد RET</h2><p class="sub">نمای کلی سرمایه، سود، کیف پول و فعالیت حساب</p></div>
+    <div class="metrics">
+      <div class="glass card metric"><div class="label">سرمایه فعال</div><div class="num">500 USDT</div><div class="mini good">+ فعال</div></div>
+      <div class="glass card metric"><div class="label">سود امروز</div><div class="num">0.83 USDT</div><div class="mini">آماده دریافت</div></div>
+      <div class="glass card metric"><div class="label">کل سود دریافتی</div><div class="num">41.50 USDT</div><div class="mini">از شروع فعالیت</div></div>
+      <div class="glass card metric"><div class="label">موجودی قابل برداشت</div><div class="num">28.20 USDT</div><div class="mini">Wallet Balance</div></div>
+    </div>
+
+    <div class="quickGrid">
+      <a href="#deposit" class="quickAction reveal"><b>＋ واریز سریع</b><span class="mini">USDT روی Solana</span></a>
+      <a href="#profit" class="quickAction reveal"><b>◉ دریافت سود</b><span class="mini">مشاهده چرخه ۲۴ ساعته</span></a>
+      <a href="#withdraw" class="quickAction reveal"><b>↗ برداشت</b><span class="mini">ثبت و پیگیری درخواست</span></a>
+      <a href="#referrals" class="quickAction reveal"><b>⌁ دعوت دوستان</b><span class="mini">کد معرفی و آمار شبکه</span></a>
+    </div>
+
+    <div class="panel3 section">
+      <div class="glass card chartCard">
+        <div class="chartTop"><div><div class="label">Account Performance</div><div class="chartVal">+8.4%</div></div><span class="status">۳۰ روز اخیر</span></div>
+        <div class="chart" id="chart"></div>
+      </div>
+      <div class="glass card">
+        <div class="label">سود قابل دریافت امروز</div>
+        <div class="profitNum" style="font-size:32px">0.83</div>
+        <div class="mini">USDT</div>
+        <a href="#profit" class="goldBtn" style="display:block;text-align:center;margin-top:16px">دریافت سود</a>
+      </div>
+      <div class="glass card">
+        <b>خلاصه وضعیت</b>
+        <div class="row"><span>واریز اخیر</span><span class="good">+500</span></div>
+        <div class="row"><span>برداشت</span><span class="status">در حال پردازش</span></div>
+        <div class="row"><span>دعوت مستقیم</span><span>۱۲</span></div>
+      </div>
+    </div>
+    <div class="activityGrid">
+      <div class="glass card reveal">
+        <div class="sectionTag">ACCOUNT ACTIVITY</div>
+        <h3 style="margin:8px 0 18px">نمونه فعالیت حساب</h3>
+        <div class="timeline">
+          <div class="timelineItem"><b>سود روزانه دریافت شد</b><div class="mini good">+0.83 USDT</div><small>امروز، 10:20</small></div>
+          <div class="timelineItem"><b>درخواست برداشت ثبت شد</b><div class="mini">100 USDT • در حال پردازش</div><small>امروز، 09:15</small></div>
+          <div class="timelineItem"><b>دوست جدید اضافه شد</b><div class="mini">Referral RET7X9K</div><small>دیروز، 21:04</small></div>
+          <div class="timelineItem"><b>واریز تأیید شد</b><div class="mini good">+500 USDT</div><small>۲ روز قبل</small></div>
+        </div>
+      </div>
+      <div class="glass card reveal">
+        <div class="sectionTag">ACCOUNT OVERVIEW</div>
+        <h3 style="margin:8px 0 18px">نمای کلی حساب</h3>
+        <div class="row"><span>سطح حساب</span><span class="status">RET Core</span></div>
+        <div class="row"><span>چرخه سود</span><span class="good">فعال</span></div>
+        <div class="row"><span>کیف پول مقصد</span><span>ثبت شده</span></div>
+        <div class="row"><span>آخرین بررسی</span><span>امروز</span></div>
+        <div class="row"><span>درخواست باز</span><span>1</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="profit" class="view">
+  <div class="wrap">
+    <div class="pagehead"><h2>Daily Profit</h2><p class="sub">مرکز اختصاصی دریافت سود روزانه RET</p></div>
+    <div class="profitLayout">
+      <div class="glass card profitHero">
+        <div class="profitRing" id="profitRing">
+          <div class="profitRingInner">
+            <div class="profitCoin">RET</div>
+            <div class="label">زمان تا دوره بعد</div>
+            <div class="timer" id="timer">03:27:18</div>
+          </div>
+        </div>
+        <div class="label">سود قابل دریافت امروز</div>
+        <div class="profitNum" id="profitAmount">0.83 USDT</div>
+        <div class="mini">اولین دوره ۲۴ ساعت پس از تأیید واریز فعال می‌شود.</div>
+        <div class="progress"><i></i></div>
+        <button id="claimBtn" class="goldBtn" type="button">دریافت سود امروز</button>
+        <div class="statStrip">
+          <div>سرمایه فعال<b>500 USDT</b></div>
+          <div>کل دریافت<b>41.50 USDT</b></div>
+          <div>چرخه<b>24H</b></div>
+        </div>
+      </div>
+      <div class="glass card">
+        <b>جزئیات دوره فعال</b>
+        <div class="row"><span>سرمایه فعال</span><span>500 USDT</span></div>
+        <div class="row"><span>مدل ماهانه</span><span>۵٪</span></div>
+        <div class="row"><span>دوره دریافت</span><span>هر ۲۴ ساعت</span></div>
+        <div class="row"><span>آخرین دریافت</span><span>دیروز ۱۸:۳۰</span></div>
+        <div class="row"><span>وضعیت امروز</span><span id="claimStatus" class="status">آماده دریافت</span></div>
+        <div class="history">
+          <b>تاریخچه اخیر</b>
+          <div class="row"><span>۳۰ مرداد</span><span class="good">+0.83 USDT</span></div>
+          <div class="row"><span>۲۹ مرداد</span><span class="good">+0.83 USDT</span></div>
+          <div class="row"><span>۲۸ مرداد</span><span class="good">+0.83 USDT</span></div>
+        </div>
+        <div class="notice">این نسخه رابط کاربری/Prototype است. در نسخه عملیاتی، زمان، مبلغ و امکان دریافت باید از سرور و سوابق واقعی حساب کاربر تعیین شوند.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="deposit" class="view">
+  <div class="wrap">
+    <div class="pagehead"><h2>واریز USDT</h2><p class="sub">تتر روی شبکه Solana — حداقل واریز 50 USDT</p></div>
+    <div class="depositHero">
+      <div class="glass walletCard">
+        <span class="network">◉ Solana Network</span>
+        <div class="networkSelector">
+          <span class="networkOpt active">Solana</span>
+          <span class="networkOpt">USDT</span>
+          <span class="networkOpt">SPL Token</span>
+        </div>
+        <div class="row"><span>دارایی</span><b>USDT</b></div>
+        <div class="row"><span>حداقل واریز</span><b>50 USDT</b></div>
+        <div class="label" style="margin-top:15px">آدرس کیف پول RET</div>
+        <div class="address" id="wallet">Biq4GAaqhPJzNWvf8SELTkXycJMiTETM2Su1cf1PjbgC</div>
+        <button class="goldBtn" id="copyWallet" type="button">کپی آدرس کیف پول</button>
+        <div class="notice">فقط USDT روی شبکه Solana به این آدرس ارسال شود. استفاده از شبکه یا دارایی دیگر می‌تواند باعث از دست رفتن وجه شود.</div>
+      </div>
+      <div class="glass card">
+        <div class="qrFake" aria-label="Decorative QR placeholder">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <p class="sub" style="text-align:center">QR نمایشی — در نسخه واقعی از همین آدرس کیف پول تولید می‌شود.</p>
+      </div>
+    </div>
+
+    <div class="panel2 section">
+      <div class="glass card">
+        <b>ثبت واریز</b>
+        <p class="sub">بعد از ارسال، شناسه تراکنش Solana را برای بررسی ثبت کنید.</p>
+        <label class="label">Transaction Signature / TxID</label>
+        <input class="input" placeholder="Solana transaction signature">
+        <button class="goldBtn">ثبت تراکنش برای بررسی</button>
+      </div>
+      <div class="glass card">
+        <b>زمان‌بندی سود</b>
+        <div class="row"><span>زمان شروع</span><span>پس از تأیید واریز</span></div>
+        <div class="row"><span>اولین دریافت</span><span>۲۴ ساعت بعد</span></div>
+        <div class="row"><span>چرخه بعدی</span><span>هر ۲۴ ساعت</span></div>
+        <div class="notice">برای نسخه واقعی، تأیید واریز باید on-chain و از طریق بک‌اند امن انجام شود.</div>
+        <div class="stepper">
+          <div class="step done"><b>01 — انتخاب شبکه</b><span class="mini">Solana</span></div>
+          <div class="step done"><b>02 — ارسال USDT</b><span class="mini">حداقل 50</span></div>
+          <div class="step active"><b>03 — ثبت TxID</b><span class="mini">در انتظار کاربر</span></div>
+          <div class="step"><b>04 — تأیید</b><span class="mini">On-chain</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="withdraw" class="view">
+  <div class="wrap">
+    <div class="pagehead"><h2>برداشت USDT</h2><p class="sub">ثبت درخواست و پیگیری مرحله‌به‌مرحله</p></div>
+    <div class="panel2">
+      <div class="glass card">
+        <label class="label">مقدار برداشت</label>
+        <input class="input" type="number" placeholder="مثلاً 100">
+        <label class="label">آدرس کیف پول مقصد روی Solana</label>
+        <input class="input" style="direction:ltr;text-align:left" placeholder="Solana wallet address">
+        <button class="goldBtn">ثبت درخواست برداشت</button>
+        <div class="withdrawFlow">
+          <div class="flow"><b>1. ثبت شد</b>درخواست وارد سیستم می‌شود.</div>
+          <div class="flow"><b>2. در حال پردازش</b>بررسی درخواست انجام می‌شود.</div>
+          <div class="flow"><b>3. پرداخت شد</b>TxID پرداخت ثبت می‌شود.</div>
+        </div>
+        <div class="notice">طبق سیاست اعلام‌شده RET، پرداخت درخواست برداشت تا ۳ روز پس از ثبت انجام می‌شود.</div>
+      </div>
+      <div class="glass card">
+        <b>درخواست اخیر</b>
+        <div class="statusTrack">
+          <div class="statusNode done"><i>✓</i><span>ثبت</span></div>
+          <div class="statusNode active"><i>2</i><span>بررسی</span></div>
+          <div class="statusNode"><i>3</i><span>آماده پرداخت</span></div>
+          <div class="statusNode"><i>4</i><span>پرداخت</span></div>
+        </div>
+        <div class="row"><span>مبلغ</span><span>100 USDT</span></div>
+        <div class="row"><span>زمان ثبت</span><span>امروز ۱۴:۲۰</span></div>
+        <div class="row"><span>وضعیت</span><span class="status">در حال پردازش</span></div>
+        <div class="row"><span>مهلت پردازش</span><span>تا ۳ روز</span></div>
+        <div class="row"><span>TxID</span><span class="mini">پس از پرداخت ثبت می‌شود</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="referrals" class="view">
+  <div class="wrap">
+    <div class="pagehead"><h2>دعوت دوستان</h2><p class="sub">سیستم معرفی مستقیم RET</p></div>
+    <div class="panel2">
+      <div class="glass card">
+        <div class="label">کد دعوت شما</div>
+        <div id="refCode" class="refCode">RET7X9K</div>
+        <button id="copyRef" class="goldBtn" type="button">کپی کد دعوت</button>
+      </div>
+      <div class="glass card">
+        <div class="row"><span>دوستان مستقیم</span><span>۱۲ نفر</span></div>
+        <div class="row"><span>نرخ نمونه پاداش</span><span>۲٪</span></div>
+        <div class="row"><span>مبنای پاداش</span><span>سود دریافت‌شده کاربر معرفی‌شده</span></div>
+        <div class="row"><span>کسر از کاربر معرفی‌شده</span><span class="good">خیر</span></div>
+        <div class="notice">پاداش معرفی از طرف پلتفرم محاسبه می‌شود و از سود کاربر معرفی‌شده کم نمی‌شود.</div>
+      </div>
+    </div>
+    <div class="refGrid">
+      <div class="glass card rankCard reveal"><div class="avatar">A</div><b>Ali</b><div class="mini">4 referrals</div><div class="good" style="margin-top:8px">+6.20 USDT</div></div>
+      <div class="glass card rankCard reveal"><div class="avatar">M</div><b>Mehdi</b><div class="mini">3 referrals</div><div class="good" style="margin-top:8px">+4.10 USDT</div></div>
+      <div class="glass card rankCard reveal"><div class="avatar">S</div><b>Sara</b><div class="mini">2 referrals</div><div class="good" style="margin-top:8px">+2.70 USDT</div></div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footerMega">
+  <div class="wrap footerGrid">
+    <div><div class="brand"><span class="logo">RET</span>RET</div><p class="sub">Digital Capital Ecosystem — premium prototype interface.</p></div>
+    <div><b>Platform</b><a href="#dashboard">Dashboard</a><a href="#profit">Daily Profit</a><a href="#deposit">Deposit</a></div>
+    <div><b>Account</b><a href="#withdraw">Withdraw</a><a href="#referrals">Referrals</a><a href="#home">Roadmap</a></div>
+    <div><b>Network</b><a href="#deposit">USDT</a><a href="#deposit">Solana</a><a href="#home">RET Vision</a></div>
+  </div>
+</footer>
+<div id="toast" class="toast">انجام شد ✓</div>
+</main>
+
+<nav class="bottom">
+  <a href="#home"><b>⌂</b>خانه</a>
+  <a href="#dashboard"><b>◫</b>پنل</a>
+  <a href="#profit"><b>◉</b>سود</a>
+  <a href="#deposit"><b>＋</b>واریز</a>
+  <a href="#withdraw"><b>↗</b>برداشت</a>
+</nav>
+
+<script>
+const views=[...document.querySelectorAll('.view')];
+const links=[...document.querySelectorAll('a[href^="#"]')];
+function route(){
+  let id=(location.hash||'#home').slice(1);
+  if(!document.getElementById(id)) id='home';
+  views.forEach(v=>v.classList.toggle('active',v.id===id));
+  links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+  scrollTo(0,0);
+}
+addEventListener('hashchange',route); route();
+
+const vals=[38,43,40,47,51,49,56,61,58,65,70,68,74,78,76,84,81,89,92,96];
+const chart=document.getElementById('chart');
+vals.forEach(h=>{const b=document.createElement('div');b.className='bar';b.style.height=h+'%';chart.appendChild(b)});
+
+async function copyText(id,btnId){
+  const btn=document.getElementById(btnId);
+  btn.onclick=async()=>{
+    const txt=document.getElementById(id).textContent.trim();
+    try{await navigator.clipboard.writeText(txt);btn.textContent='کپی شد ✓';showToast('کپی شد ✓')}
+    catch(e){btn.textContent='برای کپی، متن را نگه دارید'}
+  };
+}
+copyText('wallet','copyWallet');
+copyText('refCode','copyRef');
+
+document.getElementById('claimBtn').onclick=function(){
+  this.disabled=true;
+  this.textContent='سود امروز دریافت شد ✓';
+  document.getElementById('profitAmount').textContent='0 USDT';
+  document.getElementById('claimStatus').textContent='دریافت شد';
+};
+
+let left=3*3600+27*60+18;
+setInterval(()=>{
+  const h=Math.floor(left/3600),m=Math.floor((left%3600)/60),s=left%60;
+  document.getElementById('timer').textContent=[h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
+  if(left>0) left--;
+},1000);
+
+function showToast(text){
+  const t=document.getElementById('toast');
+  if(!t)return;
+  t.textContent=text||'انجام شد ✓';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1500);
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('show');io.unobserve(e.target)}
+}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+document.querySelectorAll('.quickAction,.card,.feature').forEach(el=>{
+  el.addEventListener('pointermove',e=>{
+    const r=el.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+    el.style.setProperty('--mx',x+'px');el.style.setProperty('--my',y+'px');
+  });
+});
+
+const oldClaim=document.getElementById('claimBtn');
+if(oldClaim){
+  oldClaim.addEventListener('click',()=>{
+    const ring=document.getElementById('profitRing');
+    if(ring){ring.classList.remove('claimFlash');void ring.offsetWidth;ring.classList.add('claimFlash')}
+    showToast('سود امروز دریافت شد');
+  });
+}
+
+
+const retCoins=[
+{id:'bitcoin',symbol:'BTC',name:'Bitcoin'},
+{id:'ethereum',symbol:'ETH',name:'Ethereum'},
+{id:'solana',symbol:'SOL',name:'Solana'},
+{id:'binancecoin',symbol:'BNB',name:'BNB'},
+{id:'ripple',symbol:'XRP',name:'XRP'},
+{id:'dogecoin',symbol:'DOGE',name:'Dogecoin'}
+];
+function retPrice(v){
+  if(v==null)return '—';
+  if(v>=1000)return '$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:0});
+  if(v>=1)return '$'+Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return '$'+Number(v).toLocaleString('en-US',{maximumFractionDigits:5});
+}
+function retChange(v){
+  if(v==null)return '—';
+  v=Number(v); return (v>0?'+':'')+v.toFixed(2)+'%';
+}
+async function loadRetMarket(){
+  const status=document.getElementById('apiStatus');
+  const heroStatus=document.getElementById('marketStatus');
+  try{
+    const ids=retCoins.map(x=>x.id).join(',');
+    const u='https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids='+encodeURIComponent(ids)+'&order=market_cap_desc&sparkline=false&price_change_percentage=24h';
+    const r=await fetch(u,{headers:{accept:'application/json'}});
+    if(!r.ok)throw new Error(r.status);
+    const data=await r.json();
+    const map=Object.fromEntries(data.map(x=>[x.id,x]));
+
+    const cards=document.getElementById('cryptoCards');
+    if(cards)cards.innerHTML=retCoins.slice(0,4).map(c=>{
+      const x=map[c.id]||{}, ch=Number(x.price_change_percentage_24h);
+      return `<div class="glass card metric reveal show"><div class="label">${c.name}</div><div class="num">${retPrice(x.current_price)}</div><div class="mini"><b>${c.symbol}</b> <span class="${ch>=0?'good':'bad'}">${retChange(ch)} 24h</span></div></div>`;
+    }).join('');
+
+    const table=document.getElementById('marketTable');
+    if(table)table.innerHTML=retCoins.map(c=>{
+      const x=map[c.id]||{}, ch=Number(x.price_change_percentage_24h);
+      return `<div class="row"><span><b>${c.symbol}</b> <small style="color:#807763">${c.name}</small></span><span>${retPrice(x.current_price)} <small class="${ch>=0?'good':'bad'}">${retChange(ch)}</small></span></div>`;
+    }).join('');
+
+    const ticker=document.getElementById('liveTicker');
+    if(ticker){
+      const items=retCoins.map(c=>{
+        const x=map[c.id]||{}, ch=Number(x.price_change_percentage_24h);
+        return `<span class="tickerItem"><b>${c.symbol}</b> ${retPrice(x.current_price)} <span class="${ch>=0?'good':'bad'}">${retChange(ch)}</span></span>`;
+      }).join('');
+      ticker.innerHTML=items+items;
+    }
+
+    const t=new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+    const lu=document.getElementById('lastUpdated');
+    if(lu)lu.textContent='بروزرسانی: '+t;
+    if(status){status.textContent='LIVE ✓';status.className='status good';}
+    if(heroStatus){heroStatus.textContent='LIVE ✓';heroStatus.className='good';}
+  }catch(e){
+    const lu=document.getElementById('lastUpdated');
+    if(lu)lu.textContent='داده زنده در دسترس نیست';
+    if(status){status.textContent='اتصال ناموفق';status.className='status bad';}
+    if(heroStatus){heroStatus.textContent='OFFLINE';heroStatus.className='bad';}
+  }
+}
+loadRetMarket();
+setInterval(loadRetMarket,60000);
+
+</script>
+</body>
+</html>
