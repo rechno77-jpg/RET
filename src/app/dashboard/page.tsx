@@ -226,5 +226,22 @@ export default function DashboardPage() {
         </div>
 
         {/* Transactions */}
-        <div style={panel}>
-          <div style={small
+<div style={panel}>
+  <div style={smallTitle}>آخرین تراکنش‌ها</div>
+
+  <Transaction
+    title="سود روزانه"
+    amount={`+ ${money(dailyProfit)} تومان`}
+  />
+
+  <Transaction
+    title="پاداش دعوت دوست"
+    amount="+ ۳۳ تومان"
+  />
+
+  <Transaction
+    title="برداشت کیف پول"
+    amount="- ۵۰٬۰۰۰ تومان"
+    negative
+  />
+</div>
