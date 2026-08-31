@@ -162,7 +162,9 @@ function StatCard({
   return (
     <div className="statCard">
       <span>{title}</span>
-      <strong className={green ? "greenValue" : ""}>{value}</strong>
+      <strong className={green ? "greenValue" : ""}>
+        {value}
+      </strong>
     </div>
   );
 }
