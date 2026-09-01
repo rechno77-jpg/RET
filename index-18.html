@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070604">
+<title>RET</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#070604;--panel:#11100c;--panel2:#0c0b08;--line:rgba(247,201,86,.16);
+  --gold:#f4ca56;--gold2:#fff0a0;--gold3:#9e6808;--text:#f7f0da;--muted:#9f9782;
+  --green:#65dba6;--red:#ff8f85;--radius:22px;--shadow:0 24px 70px rgba(0,0,0,.32)
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--text);font-family:Tahoma,Arial,sans-serif;
+  background:
+    radial-gradient(760px 420px at 90% -10%,rgba(244,202,86,.14),transparent 62%),
+    radial-gradient(700px 440px at -15% 20%,rgba(128,87,9,.12),transparent 60%),
+    linear-gradient(180deg,#060503,#090806 52%,#060503);
+  overflow-x:hidden
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+.wrap{width:min(1160px,calc(100% - 32px));margin-inline:auto}
+.glass{
+  background:linear-gradient(180deg,rgba(25,22,14,.86),rgba(12,11,8,.94));
+  border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+  backdrop-filter:blur(18px)
+}
+.muted{color:var(--muted)}
+.good{color:var(--green)}
+.bad{color:var(--red)}
+.gold{color:var(--gold)}
+.label{font-size:12px;color:#b9ae91}
+.mini{font-size:11px;color:var(--muted)}
+.num{font-weight:900;direction:ltr;unicode-bidi:isolate}
+.divider{height:1px;background:var(--line);margin:16px 0}
+.pill,.btn{
+  border:0;border-radius:14px;padding:12px 16px;font-weight:900;display:inline-flex;
+  align-items:center;justify-content:center;gap:8px
+}
+.btnGold,.pill{color:#2c1d00;background:linear-gradient(135deg,#fff0a0,#efbd3c 55%,#b87908);box-shadow:0 12px 28px rgba(244,202,86,.16)}
+.btnGhost{color:#e9dfc6;background:rgba(255,255,255,.03);border:1px solid var(--line)}
+.btnDanger{color:#ffd3cf;background:rgba(255,95,80,.08);border:1px solid rgba(255,95,80,.2)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.notice{
+  padding:12px 14px;border-radius:14px;background:rgba(244,202,86,.055);
+  border:1px solid rgba(244,202,86,.14);font-size:12px;line-height:1.85;color:#cfc5aa
+}
+
+/* Auth */
+#authGate{min-height:100vh;display:grid;place-items:center;padding:28px 0}
+.authShell{width:min(980px,calc(100% - 28px));display:grid;grid-template-columns:.9fr 1.1fr;overflow:hidden}
+.authBrand{
+  padding:34px;background:
+    radial-gradient(420px 300px at 80% 10%,rgba(255,223,119,.2),transparent 65%),
+    linear-gradient(160deg,#171209,#090806);
+  display:flex;flex-direction:column;justify-content:space-between;min-height:690px
+}
+.logoRow{display:flex;align-items:center;gap:12px;font-weight:1000;font-size:25px}
+.logo{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:12px;color:#392600;
+  background:radial-gradient(circle at 28% 22%,#fff9c3,#f4ce62 25%,#c9870e 58%,#6f4500 80%,#d79d20);
+  border:2px solid #ffe68c;box-shadow:inset 0 0 14px #fff6b899,0 0 30px #d89b1933
+}
+.authCoin{
+  width:240px;aspect-ratio:1;border-radius:50%;margin:auto;position:relative;display:grid;place-items:center;
+  background:radial-gradient(circle at 32% 25%,#fff7bd 0 8%,#f1c447 23%,#bb7608 49%,#6d4300 70%,#d49419 85%,#6a3d00 100%);
+  border:9px double #e8ba3e;box-shadow:inset 0 0 38px #fff1a04a,0 0 70px #e4a92324
+}
+.authCoin:before,.authCoin:after{content:"";position:absolute;border-radius:50%;inset:16px;border:1px solid rgba(255,246,184,.55)}
+.authCoin:after{inset:29px;border-style:dashed}
+.authCoin b{font-size:54px;color:#4d3100;text-shadow:0 1px 0 #ffe987}
+.authPitch h1{font-size:34px;margin:0 0 12px}
+.authPitch p{color:#bcb196;line-height:2;margin:0}
+.authPanel{padding:30px;background:linear-gradient(180deg,rgba(13,12,9,.98),rgba(8,7,5,.99));min-height:690px}
+.demoWarn{margin-bottom:18px}
+.authTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:5px;background:#080705;border:1px solid var(--line);border-radius:16px;margin-bottom:22px}
+.authTab{border:0;background:transparent;color:#90856f;padding:11px;border-radius:12px;font-weight:900}
+.authTab.active{background:rgba(244,202,86,.11);color:var(--gold2)}
+.formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;color:#c3b99e}
+.field input,.field select{
+  width:100%;color:#f6efd9;background:#090806;border:1px solid rgba(244,202,86,.16);
+  border-radius:13px;padding:12px 13px;outline:none
+}
+.field input:focus,.field select:focus{border-color:rgba(244,202,86,.55);box-shadow:0 0 0 3px rgba(244,202,86,.07)}
+.formActions{display:flex;gap:10px;margin-top:18px}
+.authMsg{min-height:24px;margin-top:12px;font-size:12px}
+
+/* App */
+#appShell{min-height:100vh}
+.top{
+  position:sticky;top:0;z-index:80;background:rgba(7,6,4,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(244,202,86,.09)
+}
+.nav{height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:1000;font-size:22px}
+.brand .logo{width:42px;height:42px;font-size:10px}
+.navLinks{display:flex;align-items:center;gap:5px}
+.navLinks a{padding:9px 11px;border-radius:11px;color:#a69d86;font-size:13px}
+.navLinks a.active{color:#f6d66f;background:rgba(244,202,86,.08)}
+.userBox{display:flex;align-items:center;gap:9px}
+.userChip{padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025);font-size:12px}
+.view{display:none;min-height:calc(100vh - 72px)}
+.view.active{display:block}
+.section{padding:46px 0}
+.pageHead{padding:34px 0 12px;display:flex;justify-content:space-between;align-items:end;gap:18px}
+.pageHead h1,.pageHead h2{margin:0 0 8px;font-size:32px}
+.pageHead p{margin:0;color:var(--muted);line-height:1.9}
+.sectionTag{font-size:11px;letter-spacing:1.5px;color:#d4b850;text-transform:uppercase;margin-bottom:9px}
+
+/* Home premium */
+.homeTop{padding:22px 0 0}
+.marketTicker{
+  display:flex;align-items:center;gap:12px;overflow:hidden;min-height:58px;padding:8px 10px;
+  border-radius:18px;background:linear-gradient(90deg,rgba(7,18,34,.98),rgba(12,31,55,.95),rgba(7,18,34,.98));
+  border:1px solid rgba(78,153,255,.22);box-shadow:0 18px 50px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.035)
+}
+.btcBadge{display:flex;align-items:center;gap:9px;flex:0 0 auto;padding:8px 11px;border-radius:13px;background:rgba(247,172,46,.1);border:1px solid rgba(247,172,46,.18)}
+.btcIcon{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:1000;color:#1f1400;background:linear-gradient(145deg,#ffd26b,#f7931a);box-shadow:0 0 22px rgba(247,147,26,.2)}
+.tickerViewport{overflow:hidden;min-width:0;flex:1;mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.tickerTrack{display:flex;gap:28px;width:max-content;animation:tickerMove 24s linear infinite;direction:ltr}
+.tickerItem{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:12px;color:#c8d6e8}
+.tickerItem strong{color:#fff;font-size:13px}.tickerItem .up{color:#68dfad}.tickerItem .down{color:#ff8f85}
+@keyframes tickerMove{to{transform:translateX(-50%)}}
+.homeHero{margin-top:14px;min-height:510px;position:relative;overflow:hidden;padding:0;border-radius:30px;background:
+  radial-gradient(700px 370px at 80% 22%,rgba(49,138,255,.15),transparent 65%),
+  radial-gradient(520px 300px at 20% 80%,rgba(244,202,86,.12),transparent 65%),
+  linear-gradient(145deg,#0a0d12 0%,#08121e 52%,#0d0a05 100%);border:1px solid rgba(108,161,229,.16);box-shadow:0 34px 90px rgba(0,0,0,.4)
+}
+.homeHeroGrid{display:grid;grid-template-columns:.92fr 1.08fr;min-height:510px}
+.heroCopy{padding:44px 38px;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:3}
+.heroBrand{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.heroBrand .logo{width:58px;height:58px;font-size:12px}
+.heroBrand strong{font-size:29px;letter-spacing:2px}.heroBrand small{display:block;color:#7d8ea5;margin-top:4px;font-size:10px;letter-spacing:1.8px}
+.heroStats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 22px;max-width:530px}
+.heroStat{padding:15px 12px;border-radius:16px;background:rgba(255,255,255,.035);border:1px solid rgba(109,162,232,.12)}
+.heroStat b{display:block;font-size:23px;margin-top:5px;color:#f9d66d}.heroStat span{font-size:10px;color:#8090a5}
+.heroActions{display:flex;gap:10px;flex-wrap:wrap}
+.heroVisual{position:relative;min-height:510px;display:grid;place-items:center;overflow:hidden}
+.heroVisual:before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:1px solid rgba(81,156,255,.18);box-shadow:0 0 80px rgba(54,142,255,.1),inset 0 0 80px rgba(54,142,255,.05);animation:orb 12s linear infinite}
+.heroVisual:after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px dashed rgba(244,202,86,.18);animation:orb 18s linear infinite reverse}
+@keyframes orb{to{transform:rotate(360deg)}}
+.heroArt{position:relative;z-index:2;width:min(500px,92%);filter:drop-shadow(0 34px 45px rgba(0,0,0,.42))}
+.featureShowcase{display:grid;grid-template-columns:1.18fr .82fr;gap:14px;margin-top:14px}
+.visualCard{position:relative;overflow:hidden;min-height:270px;border-radius:25px;border:1px solid rgba(87,151,225,.14);background:linear-gradient(145deg,#0d1520,#0a0b0d);box-shadow:var(--shadow)}
+.visualCard .overlay{position:absolute;inset:0;padding:25px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,transparent 35%,rgba(3,7,11,.9) 100%)}
+.visualCard h3{margin:5px 0 7px;font-size:26px}.visualCard p{margin:0;color:#8e9daf;font-size:12px;line-height:1.8}
+.visualArt{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.refMini{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}
+.refMini div{padding:11px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);text-align:center}
+.refMini b{display:block;color:#f6d36c;font-size:19px}.refMini span{font-size:9px;color:#8493a4}
+.marketStrip{display:none}
+/* Cards / dashboard */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{padding:20px}
+.metric{min-height:128px;display:flex;flex-direction:column;justify-content:center}
+.metric .num{font-size:27px;margin:8px 0 5px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:46px;border-bottom:1px solid rgba(244,202,86,.07)}
+.row:last-child{border-bottom:0}
+.quickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+.quick{padding:16px;border-radius:17px;background:rgba(255,255,255,.018);border:1px solid var(--line)}
+.quick b{display:block;margin-bottom:5px}
+
+/* Profit */
+.profitLayout{display:grid;grid-template-columns:.9fr 1.1fr;gap:12px}
+.profitMain{padding:28px;text-align:center}
+.profitMain .big{font-size:48px;color:var(--gold2);font-weight:1000;direction:ltr;margin:12px 0}
+.ring{
+  width:220px;aspect-ratio:1;border-radius:50%;margin:20px auto;display:grid;place-items:center;position:relative;
+  background:conic-gradient(var(--gold) 72%,rgba(244,202,86,.09) 0);
+  box-shadow:0 0 50px rgba(244,202,86,.1)
+}
+.ring:before{content:"";position:absolute;inset:14px;border-radius:50%;background:#0b0a07;border:1px solid var(--line)}
+.ringInner{position:relative;z-index:2}
+.ringInner b{display:block;font-size:26px;direction:ltr}
+.table{display:grid}
+.table .row{padding:0 4px}
+
+/* Deposit / withdraw */
+.wallet{word-break:break-all;direction:ltr;text-align:left;background:#080705;border:1px dashed rgba(244,202,86,.25);border-radius:14px;padding:14px;font-size:12px;line-height:1.8}
+.amountInput{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:13px}
+.amountInput input{width:100%;background:#080705;color:#fff;border:1px solid var(--line);border-radius:13px;padding:13px;outline:none}
+.feeBox{margin-top:14px;padding:16px;border-radius:16px;background:rgba(244,202,86,.045);border:1px solid var(--line)}
+.feeBox .row{min-height:40px}
+
+/* Referrals */
+.refHeader{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.refCode{direction:ltr;font-size:28px;font-weight:1000;letter-spacing:2px;color:var(--gold2);margin:10px 0}
+.generation{margin-top:12px}
+.genTop{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.genRate{padding:6px 10px;border-radius:10px;background:rgba(244,202,86,.08);border:1px solid var(--line);color:#f1d36e;font-size:12px}
+.userList{display:flex;flex-wrap:wrap;gap:8px}
+.userTag{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:12px;border:1px solid rgba(244,202,86,.12);background:rgba(255,255,255,.02)}
+.avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#f7da75,#a66c08);color:#2d1d00;font-weight:1000;font-size:11px}
+.qualify{font-size:10px;color:var(--green)}
+
+/* Wheel */
+.wheelLayout{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center}
+.wheelBox{padding:22px;text-align:center;overflow:hidden}
+.wheelWrap{width:min(330px,82vw);aspect-ratio:1;margin:8px auto 18px;position:relative}
+.pointer{
+  position:absolute;z-index:5;top:-7px;left:50%;transform:translateX(-50%);
+  width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:30px solid #fff0a0;
+  filter:drop-shadow(0 5px 6px rgba(0,0,0,.5))
+}
+#wheel{
+  width:100%;height:100%;border-radius:50%;position:relative;transition:transform 4.5s cubic-bezier(.12,.75,.12,1);
+  background:conic-gradient(
+    #15b8ff 0 36deg,#142f57 36deg 72deg,#734cff 72deg 108deg,#09223f 108deg 144deg,
+    #22d3ee 144deg 180deg,#172a46 180deg 216deg,#f0c95d 216deg 252deg,#0d315b 252deg 288deg,
+    #6e56ff 288deg 324deg,#0d223b 324deg 360deg
+  );
+  border:9px solid #315c8d;box-shadow:inset 0 0 0 5px #07192e,0 0 55px rgba(30,139,255,.22),0 0 18px rgba(111,80,255,.16)
+}
+#wheel:after{content:"RET";position:absolute;inset:38%;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#101c31,#06101d);border:4px solid #4bbcff;color:#f6d66f;font-weight:1000;font-size:19px;box-shadow:0 0 24px rgba(75,188,255,.28)}
+.sliceLabel{
+  position:absolute;left:50%;top:50%;width:42%;transform-origin:0 0;text-align:center;
+  color:#fff;font-weight:1000;font-size:11px;text-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none
+}
+.prizeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:12px}
+.prize{padding:12px;border-radius:13px;background:rgba(255,255,255,.02);border:1px solid var(--line);font-size:12px}
+.winner{min-height:46px;margin:12px 0;font-weight:900;color:var(--gold2)}
+
+
+/* Reservations */
+.reserveHero{padding:28px;border-radius:28px;background:radial-gradient(600px 320px at 80% 0%,rgba(46,145,255,.14),transparent 65%),linear-gradient(145deg,#08121e,#0b0a07);border:1px solid rgba(87,151,225,.16);box-shadow:var(--shadow)}
+.reserveTop{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.reserveProgress{display:flex;gap:8px;align-items:center}.stepDot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:rgba(255,255,255,.025);font-weight:900}.stepDot.done{background:linear-gradient(135deg,#fff0a0,#efbd3c);color:#2c1d00}.stepDot.active{box-shadow:0 0 0 3px rgba(244,202,86,.08);border-color:rgba(244,202,86,.55)}
+.assetGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.assetCard{padding:18px;border-radius:20px;background:linear-gradient(180deg,rgba(14,23,36,.96),rgba(8,10,14,.98));border:1px solid rgba(92,155,229,.15);position:relative;overflow:hidden}.assetCard.locked{opacity:.5}.assetHead{display:flex;align-items:center;justify-content:space-between;gap:10px}.assetIcon{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:1000;background:linear-gradient(145deg,#1b416c,#0a2039);border:1px solid rgba(101,178,255,.22)}.assetPrice{font-size:20px;font-weight:1000;margin:16px 0 4px}.reserveBtn{width:100%;margin-top:14px}.reserveStatus{min-height:24px;font-size:12px;margin-top:10px}.reserveTimer{font-size:30px;font-weight:1000;direction:ltr;color:var(--gold2);margin-top:8px}.monthBand{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.monthBand .glass{padding:16px;text-align:center}.marketMood{font-size:12px;color:#89a6c3}.cooldownBox{margin-top:14px;padding:18px;border-radius:20px;background:rgba(244,202,86,.045);border:1px solid var(--line)}
+@media(max-width:900px){.assetGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.assetGrid{grid-template-columns:1fr}.monthBand{grid-template-columns:1fr 1fr}.reserveHero{padding:20px}}
+
+/* Mobile nav */
+.bottom{display:none}
+.toast{position:fixed;z-index:150;left:50%;bottom:100px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#19150c;border:1px solid var(--line);color:#f4df9a;padding:11px 15px;border-radius:13px;transition:.25s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media(max-width:900px){
+  .authShell{grid-template-columns:1fr}
+  .authBrand{min-height:auto;padding:22px}.authCoin{display:none}.authPitch{margin-top:28px}
+  .authPanel{min-height:auto;padding:22px}
+  .navLinks{display:none}.userChip{display:none}
+
+  .tickerTrack{gap:20px;animation-duration:20s}
+  .btcBadge{padding:7px 9px}.btcIcon{width:27px;height:27px}
+  .homeHero{min-height:auto;border-radius:23px}.heroVisual{order:-1}
+  .marketStrip{grid-template-columns:repeat(3,1fr)}
+  .homeHeroGrid,.featureShowcase,.profitLayout,.refHeader,.wheelLayout{grid-template-columns:1fr}
+  .grid4{grid-template-columns:repeat(2,1fr)}
+  .grid3{grid-template-columns:1fr}
+  .quickGrid{grid-template-columns:repeat(2,1fr)}
+  .bottom{
+    display:grid;position:fixed;z-index:100;left:10px;right:10px;bottom:10px;
+    grid-template-columns:repeat(5,1fr);gap:4px;padding:7px;border-radius:19px;
+    background:linear-gradient(135deg,rgba(7,18,34,.97),rgba(10,34,59,.97));border:1px solid rgba(70,151,236,.22);box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 1px rgba(255,255,255,.035);backdrop-filter:blur(18px)
+  }
+  .bottom a{font-size:9px;color:#7f9ab6;text-align:center;padding:8px 2px;border-radius:12px}
+  .bottom a b{display:block;font-size:16px;margin-bottom:3px}
+  .bottom a.active{color:#fff;background:linear-gradient(135deg,rgba(45,145,255,.2),rgba(103,71,255,.16));box-shadow:inset 0 0 0 1px rgba(93,172,255,.16)}
+  #appShell main{padding-bottom:105px}
+  .section{padding:36px 0}.pageHead{padding:27px 0 10px}
+  .pageHead h1,.pageHead h2{font-size:27px}
+}
+@media(max-width:520px){
+  .wrap{width:calc(100% - 22px)}
+  .formGrid{grid-template-columns:1fr}.field.full{grid-column:auto}
+  .formActions{flex-direction:column}.formActions button{width:100%}
+  .authPanel,.authBrand{padding:18px}
+  .marketStrip{grid-template-columns:repeat(2,1fr)}
+  .marketCoin{padding:13px}.marketCoin b{font-size:15px}
+  .card{padding:17px}.heroCopy{padding:27px 21px}.heroVisual{min-height:350px}.homeHeroGrid{min-height:auto}.heroStats{grid-template-columns:repeat(3,1fr)}
+  .heroBrand strong{font-size:25px}.visualCard{min-height:245px}.visualCard h3{font-size:22px}
+  .grid4,.grid2{grid-template-columns:1fr 1fr}
+  .metric{min-height:112px}.metric .num{font-size:22px}
+  .quickGrid{grid-template-columns:1fr 1fr}
+  .wheelWrap{width:min(300px,84vw)}
+  .prizeGrid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<section id="authGate">
+  <div class="authShell glass">
+    <div class="authBrand">
+      <div class="logoRow"><span class="logo">RET</span> RET</div>
+      <div class="authCoin"><b>RET</b></div>
+      <div class="authPitch">
+        <h1>ورود به RET</h1>
+        <p>دسترسی به پنل فقط بعد از ساخت حساب یا ورود به حساب موجود امکان‌پذیر است.</p>
+      </div>
+    </div>
+    <div class="authPanel">
+      <div class="notice demoWarn">نسخه نمایشی رابط کاربری است. برای تست، اطلاعات هویتی واقعی وارد نکنید؛ نسخه نهایی باید اطلاعات هویتی را فقط روی سرور امن نگهداری کند.</div>
+      <div class="authTabs">
+        <button class="authTab active" data-tab="register">ثبت‌نام</button>
+        <button class="authTab" data-tab="login">ورود</button>
+      </div>
+
+      <form id="registerForm">
+        <div class="formGrid">
+          <div class="field"><label>نام *</label><input id="firstName" required autocomplete="given-name"></div>
+          <div class="field"><label>نام خانوادگی *</label><input id="lastName" required autocomplete="family-name"></div>
+          <div class="field"><label>شماره موبایل *</label><input id="phone" required inputmode="tel" autocomplete="tel"></div>
+          <div class="field"><label>ایمیل *</label><input id="email" required type="email" autocomplete="email"></div>
+          <div class="field">
+            <label>نوع مدرک *</label>
+            <select id="docType" required><option value="national">کارت ملی</option><option value="passport">پاسپورت</option><option value="other">مدرک شناسایی دیگر</option></select>
+          </div>
+          <div class="field"><label>شماره مدرک *</label><input id="docNumber" required autocomplete="off"></div>
+          <div class="field"><label>نام کاربری *</label><input id="username" required autocomplete="username"></div>
+          <div class="field"><label>کد معرف</label><input id="referrer" autocomplete="off" placeholder="در صورت وجود"></div>
+          <div class="field"><label>رمز عبور *</label><input id="password" required type="password" minlength="6" autocomplete="new-password"></div>
+          <div class="field"><label>تکرار رمز عبور *</label><input id="password2" required type="password" minlength="6" autocomplete="new-password"></div>
+        </div>
+        <div class="formActions"><button class="btn btnGold" type="submit">ساخت حساب و ورود</button></div>
+        <div id="registerMsg" class="authMsg"></div>
+      </form>
+
+      <form id="loginForm" class="hidden">
+        <div class="formGrid">
+          <div class="field full"><label>نام کاربری یا ایمیل</label><input id="loginId" required autocomplete="username"></div>
+          <div class="field full"><label>رمز عبور</label><input id="loginPass" required type="password" autocomplete="current-password"></div>
+        </div>
+        <div class="formActions"><button class="btn btnGold" type="submit">ورود به حساب</button></div>
+        <div id="loginMsg" class="authMsg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div id="appShell" class="hidden">
+<header class="top">
+  <div class="wrap nav">
+    <a class="brand" href="#home"><span class="logo">RET</span>RET</a>
+    <nav class="navLinks">
+      <a href="#home">خانه</a><a href="#dashboard">پنل</a><a href="#reservations">رزرو</a><a href="#profit">سود</a>
+      <a href="#deposit">واریز</a><a href="#withdraw">برداشت</a><a href="#referrals">دعوت دوستان</a>
+    </nav>
+    <div class="userBox">
+      <span class="userChip" id="headerUser">@user</span>
+      <button class="btn btnGhost" id="logoutBtn">خروج</button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="home" class="view active">
+  <div class="wrap">
+    <div class="homeTop">
+      <div class="marketTicker" aria-label="نوار بازار رمزارز">
+        <div class="btcBadge"><span class="btcIcon">₿</span><div><b>BITCOIN</b><div class="mini">BTC / USD</div></div></div>
+        <div class="tickerViewport"><div class="tickerTrack" id="tickerTrack">
+          <div class="tickerItem"><strong>BTC</strong><span>$...</span><span>در حال دریافت</span></div>
+          <div class="tickerItem"><strong>ETH</strong><span>$...</span></div>
+          <div class="tickerItem"><strong>SOL</strong><span>$...</span></div>
+          <div class="tickerItem"><strong>BNB</strong><span>$...</span></div>
+          <div class="tickerItem"><strong>XRP</strong><span>$...</span></div>
+          <div class="tickerItem"><strong>DOGE</strong><span>$...</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="homeHero">
+      <div class="homeHeroGrid">
+        <div class="heroCopy">
+          <div class="heroBrand"><span class="logo">RET</span><div><strong>RET</strong><small>DIGITAL FINANCE ECOSYSTEM</small></div></div>
+          <div class="heroStats">
+            <div class="heroStat"><span>نرخ طرح</span><b>12%</b></div>
+            <div class="heroStat"><span>روزانه</span><b>0.4%</b></div>
+            <div class="heroStat"><span>شبکه</span><b>SOL</b></div>
+          </div>
+          <div class="heroActions"><a class="btn btnGold" href="#deposit">واریز USDT</a><a class="btn btnGhost" href="#dashboard">مشاهده پنل</a></div>
+        </div>
+        <div class="heroVisual">
+          <svg class="heroArt" viewBox="0 0 640 520" role="img" aria-label="تصویر دیجیتال RET و بیتکوین">
+            <defs>
+              <radialGradient id="g1" cx="32%" cy="25%"><stop offset="0" stop-color="#fff8bd"/><stop offset=".24" stop-color="#efc84e"/><stop offset=".58" stop-color="#a96709"/><stop offset="1" stop-color="#3d2600"/></radialGradient>
+              <linearGradient id="line" x1="0" x2="1"><stop stop-color="#28c6ff"/><stop offset=".5" stop-color="#6d60ff"/><stop offset="1" stop-color="#f0c75c"/></linearGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <g opacity=".35" stroke="#367db7" fill="none"><path d="M25 410 C150 340 220 405 335 300 S535 185 620 210"/><path d="M30 445 C160 365 240 430 350 325 S530 220 615 245"/></g>
+            <g filter="url(#glow)"><ellipse cx="360" cy="280" rx="220" ry="70" fill="none" stroke="url(#line)" stroke-width="5" transform="rotate(-14 360 280)"/></g>
+            <circle cx="360" cy="250" r="156" fill="url(#g1)" stroke="#f5d36e" stroke-width="8"/>
+            <circle cx="360" cy="250" r="132" fill="#0b1420" stroke="#d8a936" stroke-width="3"/>
+            <circle cx="360" cy="250" r="115" fill="none" stroke="#2a6ea7" stroke-width="2" stroke-dasharray="8 8"/>
+            <text x="360" y="282" text-anchor="middle" font-family="Arial" font-weight="900" font-size="90" fill="#f1c54d">RET</text>
+            <circle cx="154" cy="162" r="59" fill="#f7931a" stroke="#ffc45e" stroke-width="6"/>
+            <text x="154" y="183" text-anchor="middle" font-family="Arial" font-weight="900" font-size="62" fill="#fff">₿</text>
+            <g opacity=".95"><rect x="88" y="390" width="18" height="62" rx="4" fill="#21c3ff"/><rect x="115" y="360" width="18" height="92" rx="4" fill="#7c5cff"/><rect x="142" y="407" width="18" height="45" rx="4" fill="#f1c957"/><rect x="169" y="330" width="18" height="122" rx="4" fill="#22d3ee"/><rect x="196" y="380" width="18" height="72" rx="4" fill="#5c8dff"/></g>
+            <g fill="#7cc7ff"><circle cx="527" cy="103" r="5"/><circle cx="570" cy="136" r="4"/><circle cx="562" cy="326" r="5"/><circle cx="502" cy="390" r="4"/></g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="featureShowcase">
+      <a href="#referrals" class="visualCard">
+        <svg class="visualArt" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs><linearGradient id="b1" x1="0" x2="1"><stop stop-color="#06101b"/><stop offset="1" stop-color="#12345a"/></linearGradient></defs>
+          <rect width="900" height="420" fill="url(#b1)"/>
+          <g fill="none" stroke="#44a8ff" opacity=".28"><circle cx="625" cy="175" r="126"/><circle cx="625" cy="175" r="88"/><circle cx="625" cy="175" r="48"/><path d="M625 48v254M498 175h254M535 85l180 180M715 85L535 265"/></g>
+          <g fill="#f0ca62"><circle cx="625" cy="175" r="18"/><circle cx="535" cy="85" r="10"/><circle cx="715" cy="85" r="10"/><circle cx="535" cy="265" r="10"/><circle cx="715" cy="265" r="10"/></g>
+          <path d="M260 320 C335 250 390 280 460 205 S575 125 645 160" fill="none" stroke="#6c5cff" stroke-width="5" opacity=".7"/>
+        </svg>
+        <div class="overlay"><div class="sectionTag">RET NETWORK</div><h3>شبکه دعوت RET</h3><div class="refMini"><div><b>30%</b><span>نسل اول</span></div><div><b>20%</b><span>نسل دوم</span></div><div><b>10%</b><span>نسل سوم</span></div></div></div>
+      </a>
+
+      <a href="#profit" class="visualCard">
+        <svg class="visualArt" viewBox="0 0 620 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs><radialGradient id="p1"><stop stop-color="#18365c"/><stop offset="1" stop-color="#060b12"/></radialGradient></defs>
+          <rect width="620" height="420" fill="url(#p1)"/>
+          <g opacity=".65" fill="none" stroke-width="4"><path d="M40 300 L130 250 L205 278 L292 176 L370 205 L470 118 L580 78" stroke="#22d3ee"/><path d="M40 338 L130 306 L205 320 L292 250 L370 264 L470 196 L580 165" stroke="#f0c95d" opacity=".55"/></g>
+          <g fill="#22d3ee"><circle cx="292" cy="176" r="7"/><circle cx="470" cy="118" r="7"/><circle cx="580" cy="78" r="7"/></g>
+        </svg>
+        <div class="overlay"><div class="sectionTag">DAILY PROFIT</div><h3>سود روزانه</h3><p>نمایش محاسبه روزانه، تاریخچه و وضعیت دریافت.</p></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" class="view">
+  <div class="wrap">
+    <div class="pageHead"><div><div class="sectionTag">ACCOUNT</div><h1>پنل کاربری</h1><p>خلاصه حساب و وضعیت طرح.</p></div></div>
+    <div class="grid4">
+      <div class="glass card metric"><span class="label">سرمایه فعال</span><div class="num">1,000 USDT</div><span class="mini">نمونه نمایشی</span></div>
+      <div class="glass card metric"><span class="label">بازه بازده ماهانه</span><div class="num gold">8%–12%</div><span class="mini">وابسته به وضعیت بازار</span></div>
+      <div class="glass card metric"><span class="label">چرخه روزانه</span><div class="num">4 رزرو</div><span class="mini">هر رزرو ۱۰ دقیقه</span></div>
+      <div class="glass card metric"><span class="label">موجودی قابل برداشت</span><div class="num">240 USDT</div><span class="mini">نمونه نمایشی</span></div>
+    </div>
+    <div class="quickGrid">
+      <a href="#reservations" class="quick"><b>رزرو روزانه</b><span class="mini">۴ رزرو ۱۰ دقیقه‌ای</span></a>
+      <a href="#deposit" class="quick"><b>واریز USDT</b><span class="mini">شبکه Solana</span></a>
+      <a href="#withdraw" class="quick"><b>برداشت</b><span class="mini">حداقل 100 USDT</span></a>
+      <a href="#referrals" class="quick"><b>شبکه دعوت</b><span class="mini">سه نسل</span></a>
+    </div>
+    <div class="section grid2">
+      <div class="glass card">
+        <div class="sectionTag">PLAN RULES</div>
+        <div class="row"><span>بازه بازده ماهانه</span><b>۸٪ تا ۱۲٪</b></div>
+        <div class="row"><span>مبنای نتیجه</span><b>وضعیت بازار + نتیجه رزروها</b></div>
+        <div class="row"><span>چرخه روزانه</span><b>۴ رزرو × ۱۰ دقیقه</b></div>
+        <div class="row"><span>حداقل برداشت</span><b>100 USDT</b></div>
+        <div class="row"><span>کارمزد برداشت</span><b>۵٪ مبلغ برداشت</b></div>
+        <div class="row"><span>پردازش درخواست</span><b>تا ۳ روز</b></div>
+      </div>
+      <div class="glass card">
+        <div class="sectionTag">REFERRAL</div>
+        <div class="row"><span>نسل اول</span><b>۳۰٪</b></div>
+        <div class="row"><span>نسل دوم</span><b>۲۰٪</b></div>
+        <div class="row"><span>نسل سوم</span><b>۱۰٪</b></div>
+        <div class="row"><span>شرط یک شانس چرخونه</span><b>واریز ≥ 80 USDT</b></div>
+        <div class="row"><span>تعداد دعوت مستقیم</span><b>نامحدود</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="reservations" class="view">
+  <div class="wrap">
+    <div class="pageHead"><div><div class="sectionTag">MARKET RESERVATIONS</div><h1>رزروهای روزانه</h1><p>چهار رزرو ۱۰ دقیقه‌ای روی BTC، ETH، SOL و BNB. نتیجه هر رزرو به وضعیت بازار همان دارایی وابسته است.</p></div></div>
+    <div class="reserveHero">
+      <div class="reserveTop"><div><div class="label">پیشرفت چرخه امروز</div><div class="reserveProgress" id="reserveProgress"><span class="stepDot active">1</span><span class="stepDot">2</span><span class="stepDot">3</span><span class="stepDot">4</span></div></div><div><div class="label">وضعیت چرخه</div><b id="cycleState">آماده رزرو اول</b></div></div>
+      <div class="assetGrid" id="assetGrid">
+        <div class="assetCard" data-asset="BTC"><div class="assetHead"><div><b>Bitcoin</b><div class="mini">BTC / USD</div></div><span class="assetIcon">₿</span></div><div class="assetPrice" id="priceBTC">$—</div><div class="marketMood" id="moodBTC">در حال دریافت وضعیت بازار...</div><button class="btn btnGold reserveBtn" data-reserve="BTC">شروع رزرو ۱۰ دقیقه‌ای</button><div class="reserveStatus" id="statusBTC"></div></div>
+        <div class="assetCard" data-asset="ETH"><div class="assetHead"><div><b>Ethereum</b><div class="mini">ETH / USD</div></div><span class="assetIcon">Ξ</span></div><div class="assetPrice" id="priceETH">$—</div><div class="marketMood" id="moodETH">در حال دریافت وضعیت بازار...</div><button class="btn btnGold reserveBtn" data-reserve="ETH">شروع رزرو ۱۰ دقیقه‌ای</button><div class="reserveStatus" id="statusETH"></div></div>
+        <div class="assetCard" data-asset="SOL"><div class="assetHead"><div><b>Solana</b><div class="mini">SOL / USD</div></div><span class="assetIcon">S</span></div><div class="assetPrice" id="priceSOL">$—</div><div class="marketMood" id="moodSOL">در حال دریافت وضعیت بازار...</div><button class="btn btnGold reserveBtn" data-reserve="SOL">شروع رزرو ۱۰ دقیقه‌ای</button><div class="reserveStatus" id="statusSOL"></div></div>
+        <div class="assetCard" data-asset="BNB"><div class="assetHead"><div><b>BNB</b><div class="mini">BNB / USD</div></div><span class="assetIcon">B</span></div><div class="assetPrice" id="priceBNB">$—</div><div class="marketMood" id="moodBNB">در حال دریافت وضعیت بازار...</div><button class="btn btnGold reserveBtn" data-reserve="BNB">شروع رزرو ۱۰ دقیقه‌ای</button><div class="reserveStatus" id="statusBNB"></div></div>
+      </div>
+      <div class="cooldownBox"><div class="label">تایمر چرخه بعدی</div><div class="reserveTimer" id="cooldownTimer">—</div><div class="mini">بعد از ثبت رزرو چهارم، چرخه ۲۴ ساعته برای چهار رزرو بعدی شروع می‌شود.</div></div>
+      <div class="monthBand"><div class="glass"><div class="label">بازه ماهانه</div><b class="gold">8% تا 12%</b></div><div class="glass"><div class="label">مبنای نتیجه</div><b>وضعیت بازار</b></div><div class="glass"><div class="label">رزروهای روزانه</div><b>4 × 10 دقیقه</b></div></div>
+      <div class="notice" style="margin-top:14px">این نسخه نمایشی است. برای نسخه واقعی، نتیجه رزرو باید با داده معتبر بازار و منطق سمت سرور محاسبه و ثبت شود؛ نه با تصادف ساده در مرورگر.</div>
+    </div>
+  </div>
+</section>
+
+<section id="profit" class="view">
+  <div class="wrap">
+    <div class="pageHead"><div><div class="sectionTag">PERFORMANCE</div><h1>عملکرد و سود</h1><p>نتیجه ماهانه ثابت نیست و بر اساس عملکرد رزروها و وضعیت بازار در بازه هدف ۸٪ تا ۱۲٪ تغییر می‌کند.</p></div></div>
+    <div class="grid3">
+      <div class="glass card metric"><span class="label">رزروهای چرخه جاری</span><div class="num" id="profitReserveCount">0 / 4</div><span class="mini">هر رزرو ۱۰ دقیقه</span></div>
+      <div class="glass card metric"><span class="label">نتیجه‌های موفق نمونه</span><div class="num good" id="profitWins">0</div><span class="mini">بر اساس رزروهای تکمیل‌شده</span></div>
+      <div class="glass card metric"><span class="label">بازه بازده ماهانه</span><div class="num gold">8%–12%</div><span class="mini">وابسته به بازار</span></div>
+    </div>
+    <div class="section grid2"><div class="glass card"><div class="sectionTag">RECENT RESERVATIONS</div><div id="reservationHistory" class="table"><div class="row"><span class="muted">هنوز رزروی ثبت نشده</span><span>—</span></div></div></div><div class="glass card"><div class="row"><span>چرخه روزانه</span><b>۴ رزرو</b></div><div class="row"><span>مدت هر رزرو</span><b>۱۰ دقیقه</b></div><div class="row"><span>قفل پس از رزرو چهارم</span><b>۲۴ ساعت</b></div><div class="row"><span>نتیجه</span><b>موفق / سوخته</b></div></div></div>
+  </div>
+</section>
+
+<section id="deposit" class="view">
+  <div class="wrap">
+    <div class="pageHead"><div><div class="sectionTag">DEPOSIT</div><h1>واریز تتر</h1><p>USDT روی شبکه Solana.</p></div></div>
+    <div class="grid2">
+      <div class="glass card">
+        <div class="row"><span>دارایی</span><b>USDT</b></div>
+        <div class="row"><span>شبکه</span><b>Solana</b></div>
+        <div class="row"><span>حداقل واریز</span><b>50 USDT</b></div>
+        <div class="divider"></div>
+        <div class="label">آدرس کیف پول</div>
+        <div id="wallet" class="wallet">Biq4GAaqhPJzNWvf8SELTkXycJMiTETM2Su1cf1PjbgC</div>
+        <button class="btn btnGold" id="copyWallet" style="margin-top:12px">کپی آدرس</button>
+      </div>
+      <div class="glass card">
+        <div class="sectionTag">REFERRAL CHANCE</div>
+        <h3 style="margin:0 0 10px">شرط شانس دعوت</h3>
+        <p class="muted" style="line-height:1.9">اگر کاربر جدید از طریق دعوت ثبت‌نام کرده باشد، پس از واریز حداقل 80 USDT یک شانس قرعه‌کشی برای معرف مرتبط ثبت می‌شود.</p>
+        <div class="notice">این بخش در نسخه واقعی باید پس از تأیید تراکنش روی سرور یا از طریق بررسی on-chain فعال شود.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="withdraw" class="view">
+  <div class="wrap">
+    <div class="pageHead"><div><div class="sectionTag">WITHDRAW</div><h1>برداشت وجه</h1><p>حداقل مبلغ برداشت 100 USDT و کارمزد هر برداشت ۵٪ است.</p></div></div>
+    <div class="grid2">
+      <div class="glass card">
+        <label class="label" for="withdrawAmount">مبلغ درخواست</label>
+        <div class="amountInput"><input id="withdrawAmount" type="number" min="100" step="1" value="100"><button class="btn btnGhost" type="button" id="setMax">MAX</button></div>
+        <div class="feeBox">
+          <div class="row"><span>مبلغ درخواست</span><b id="gross">100 USDT</b></div>
+          <div class="row"><span>کارمزد ۵٪</span><b id="fee">5 USDT</b></div>
+          <div class="row"><span>مبلغ خالص دریافتی</span><b id="net" class="gold">95 USDT</b></div>
+        </div>
+        <div id="withdrawWarn" class="authMsg"></div>
+        <button class="btn btnGold" id="withdrawBtn" style="width:100%;margin-top:10px">ثبت درخواست برداشت</button>
+      </div>
+      <div class="glass card">
+        <div class="row"><span>حداقل برداشت</span><b>100 USDT</b></div>
+        <div class="row"><span>کارمزد</span><b>5%</b></div>
+        <div class="row"><span>زمان پردازش</span><b>تا ۳ روز</b></div>
+        <div class="row"><span>وضعیت آخرین درخواست</span><span class="muted">درخواستی ثبت نشده</span></div>
+        <div class="notice" style="margin-top:14px">پیش از تأیید نهایی، مبلغ درخواست، کارمزد و مبلغ خالص به کاربر نشان داده می‌شود.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="referrals" class="view">
+  <div class="wrap">
+    <div class="pageHead"><div><div class="sectionTag">NETWORK</div><h1>دعوت از دوستان</h1><p>نمایش سه نسل زیرمجموعه با نام کاربری.</p></div></div>
+    <div class="refHeader">
+      <div class="glass card">
+        <span class="label">کد دعوت شما</span>
+        <div id="refCode" class="refCode">RET-DEMO</div>
+        <button class="btn btnGold" id="copyRef">کپی کد دعوت</button>
+      </div>
+      <div class="glass card">
+        <div class="row"><span>دعوت مستقیم</span><b>نامحدود</b></div>
+        <div class="row"><span>شانس فعلی نمونه</span><b id="refChanceCount">2</b></div>
+        <div class="row"><span>شرط ایجاد شانس</span><b>واریز حداقل 80 USDT</b></div>
+        <div class="row"><span>نسل‌های دارای سهم</span><b>۳ نسل</b></div>
+      </div>
+    </div>
+
+    <div class="generation glass card">
+      <div class="genTop"><div><b>نسل اول</b><div class="mini">کسانی که مستقیماً با دعوت شما ثبت‌نام کرده‌اند</div></div><span class="genRate">۳۰٪ درآمد روزانه</span></div>
+      <div class="userList">
+        <div class="userTag"><span class="avatar">A</span><span>@ali92</span><span class="qualify">✓ 80+ USDT</span></div>
+        <div class="userTag"><span class="avatar">S</span><span>@sara21</span><span class="qualify">✓ 80+ USDT</span></div>
+        <div class="userTag"><span class="avatar">M</span><span>@mehdi_r</span></div>
+        <div class="userTag"><span class="avatar">N</span><span>@nima77</span></div>
+      </div>
+    </div>
+
+    <div class="generation glass card">
+      <div class="genTop"><div><b>نسل دوم</b><div class="mini">افرادی که توسط نسل اول شما دعوت شده‌اند</div></div><span class="genRate">۲۰٪ درآمد روزانه</span></div>
+      <div class="userList">
+        <div class="userTag"><span class="avatar">R</span><span>@reza80</span></div>
+        <div class="userTag"><span class="avatar">M</span><span>@maryam_k</span><span class="qualify">✓ 80+ USDT</span></div>
+        <div class="userTag"><span class="avatar">A</span><span>@amir44</span></div>
+      </div>
+    </div>
+
+    <div class="generation glass card">
+      <div class="genTop"><div><b>نسل سوم</b><div class="mini">افرادی که توسط نسل دوم شما دعوت شده‌اند</div></div><span class="genRate">۱۰٪ درآمد روزانه</span></div>
+      <div class="userList">
+        <div class="userTag"><span class="avatar">H</span><span>@hasti_m</span></div>
+        <div class="userTag"><span class="avatar">P</span><span>@parsa11</span></div>
+      </div>
+    </div>
+
+
+    <div class="section" id="wheelSection">
+      <div class="pageHead"><div><div class="sectionTag">RET LUCKY WHEEL</div><h2>چرخ شانس RET</h2><p>چرخ شانس در بخش دعوت دوستان قرار دارد.</p></div></div>
+      <div class="wheelLayout">
+        <div class="glass wheelBox">
+          <div class="wheelWrap"><div class="pointer"></div><div id="wheelDisc"></div></div>
+          <div class="winner" id="winnerText">برای تست، چرخ را بچرخانید.</div>
+          <button id="spinBtn" class="btn btnGold">چرخاندن — <span id="spinCount">2</span> شانس</button>
+          <div class="mini" style="margin-top:10px">نتیجه این نسخه فقط نمایشی است؛ در نسخه واقعی نتیجه باید سمت سرور تعیین و ثبت شود.</div>
+        </div>
+        <div class="glass card">
+          <div class="sectionTag">PRIZES</div><h3 style="margin:0 0 10px">جوایز چرخونه</h3>
+          <div class="prizeGrid"><div class="prize">3 USDT <span class="good">— احتمال بیشتر</span></div><div class="prize">5 USDT</div><div class="prize">8 USDT</div><div class="prize">10 USDT</div><div class="prize">هندزفری بلوتوث</div><div class="prize">پاوربانک</div></div>
+          <div class="divider"></div><div class="label">آخرین نتایج نمایشی</div>
+          <div id="spinHistory" class="table"><div class="row"><span class="muted">هنوز چرخشی ثبت نشده</span><span>—</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice" style="margin-top:12px">این نام‌های کاربری صرفاً داده نمونه برای نمایش طراحی هستند. در نسخه واقعی لیست نسل‌ها باید از دیتابیس کاربر بارگذاری شود.</div>
+  </div>
+</section>
+</main>
+
+<nav class="bottom">
+  <a href="#home"><b>⌂</b>خانه</a>
+  <a href="#dashboard"><b>◫</b>پنل</a>
+  <a href="#reservations"><b>◎</b>رزرو</a>
+  <a href="#withdraw"><b>⇩</b>برداشت</a>
+  <a href="#referrals"><b>♢</b>دعوت</a>
+</nav>
+</div>
+
+<div class="toast" id="toast">انجام شد</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const STORE='ret_demo_users_v3', SESSION='ret_demo_session_v3', CHANCES='ret_demo_chances_v3', SPINS='ret_demo_spins_v3', RESERVES='ret_demo_reserves_v1';
+const loadUsers=()=>{try{return JSON.parse(localStorage.getItem(STORE)||'[]')}catch{return[]}};
+const saveUsers=u=>localStorage.setItem(STORE,JSON.stringify(u));
+const normalize=s=>String(s||'').trim().toLowerCase();
+async function sha256(text){
+  const data=new TextEncoder().encode(text);
+  const hash=await crypto.subtle.digest('SHA-256',data);
+  return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1700)}
+
+const qref=new URLSearchParams(location.search).get('ref');
+if(qref) $('#referrer').value=qref;
+
+$$('.authTab').forEach(btn=>btn.onclick=()=>{
+  $$('.authTab').forEach(b=>b.classList.toggle('active',b===btn));
+  const reg=btn.dataset.tab==='register';
+  $('#registerForm').classList.toggle('hidden',!reg);
+  $('#loginForm').classList.toggle('hidden',reg);
+});
+
+$('#registerForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const msg=$('#registerMsg'); msg.textContent='';
+  const users=loadUsers();
+  const doc=normalize($('#docNumber').value).replace(/\s+/g,'');
+  const username=normalize($('#username').value).replace(/^@/,'');
+  const email=normalize($('#email').value);
+  const phone=$('#phone').value.trim();
+  const pass=$('#password').value, pass2=$('#password2').value;
+  if(!doc||!username||!email||!phone){msg.className='authMsg bad';msg.textContent='تمام فیلدهای ستاره‌دار باید تکمیل شوند.';return}
+  if(pass!==pass2){msg.className='authMsg bad';msg.textContent='رمز عبور و تکرار آن یکسان نیست.';return}
+  if(users.some(u=>u.doc===doc)){msg.className='authMsg bad';msg.textContent='این شماره مدرک قبلاً برای یک حساب ثبت شده است.';return}
+  if(users.some(u=>u.username===username)){msg.className='authMsg bad';msg.textContent='این نام کاربری قبلاً استفاده شده است.';return}
+  if(users.some(u=>u.email===email)){msg.className='authMsg bad';msg.textContent='این ایمیل قبلاً استفاده شده است.';return}
+  const passwordHash=await sha256(pass);
+  const refCode='RET'+Math.random().toString(36).slice(2,7).toUpperCase();
+  const user={
+    firstName:$('#firstName').value.trim(),lastName:$('#lastName').value.trim(),phone,email,
+    docType:$('#docType').value,doc,username,passwordHash,referrer:$('#referrer').value.trim(),refCode
+  };
+  users.push(user);saveUsers(users);localStorage.setItem(SESSION,username);
+  localStorage.setItem(CHANCES,localStorage.getItem(CHANCES)||'2');
+  enterApp();
+});
+
+$('#loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const id=normalize($('#loginId').value).replace(/^@/,'');
+  const ph=await sha256($('#loginPass').value);
+  const user=loadUsers().find(u=>(u.username===id||u.email===id)&&u.passwordHash===ph);
+  if(!user){$('#loginMsg').className='authMsg bad';$('#loginMsg').textContent='نام کاربری/ایمیل یا رمز عبور نادرست است.';return}
+  localStorage.setItem(SESSION,user.username);enterApp();
+});
+
+function currentUser(){const s=localStorage.getItem(SESSION);return loadUsers().find(u=>u.username===s)}
+function enterApp(){
+  const u=currentUser(); if(!u)return;
+  $('#authGate').classList.add('hidden');$('#appShell').classList.remove('hidden');
+  $('#headerUser').textContent='@'+u.username;$('#refCode').textContent=u.refCode;
+  route();syncChances();loadMarket();syncReservations();
+}
+$('#logoutBtn').onclick=()=>{localStorage.removeItem(SESSION);location.hash='';location.reload()};
+
+const views=$$('.view');
+const routeLinks=$$('a[href^="#"]');
+function route(){
+  let id=(location.hash||'#home').slice(1);
+  if(id==='wheelSection'){id='referrals';setTimeout(()=>$('#wheelSection')?.scrollIntoView({behavior:'smooth'}),80)}
+  if(!document.getElementById(id)||!document.getElementById(id)?.classList.contains('view')) id='home';
+  views.forEach(v=>v.classList.toggle('active',v.id===id));
+  routeLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));
+  if(location.hash!=='#wheelSection') scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+
+$('#copyWallet').onclick=()=>navigator.clipboard.writeText($('#wallet').textContent.trim()).then(()=>toast('آدرس کپی شد'));
+$('#copyRef').onclick=()=>navigator.clipboard.writeText($('#refCode').textContent.trim()).then(()=>toast('کد دعوت کپی شد'));
+
+const wa=$('#withdrawAmount');
+function calcWithdraw(){
+  const v=Math.max(0,Number(wa.value)||0), fee=v*.05, net=v-fee;
+  $('#gross').textContent=v.toFixed(2).replace(/\.00$/,'')+' USDT';
+  $('#fee').textContent=fee.toFixed(2).replace(/\.00$/,'')+' USDT';
+  $('#net').textContent=net.toFixed(2).replace(/\.00$/,'')+' USDT';
+  const ok=v>=100;$('#withdrawBtn').disabled=!ok;
+  $('#withdrawWarn').className='authMsg '+(ok?'good':'bad');
+  $('#withdrawWarn').textContent=ok?'کارمزد و مبلغ خالص قبل از ثبت نمایش داده شده است.':'حداقل مبلغ برداشت 100 USDT است.';
+}
+wa.addEventListener('input',calcWithdraw);calcWithdraw();
+$('#setMax').onclick=()=>{wa.value=240;calcWithdraw()};
+$('#withdrawBtn').onclick=()=>toast('درخواست برداشت نمایشی ثبت شد');
+
+
+function loadReserveState(){try{return JSON.parse(localStorage.getItem(RESERVES)||'{"items":[],"cooldownUntil":0}') }catch{return {items:[],cooldownUntil:0}}}
+function saveReserveState(v){localStorage.setItem(RESERVES,JSON.stringify(v))}
+const reserveAssets=['BTC','ETH','SOL','BNB'];
+function syncReservations(){
+  const s=loadReserveState(), now=Date.now();
+  if(s.cooldownUntil && now>=s.cooldownUntil){s.items=[];s.cooldownUntil=0;saveReserveState(s)}
+  const count=s.items.length;
+  $$('.stepDot').forEach((d,i)=>{d.classList.toggle('done',i<count);d.classList.toggle('active',i===count && count<4)});
+  if($('#profitReserveCount')) $('#profitReserveCount').textContent=count+' / 4';
+  const wins=s.items.filter(x=>x.result==='موفق').length; if($('#profitWins')) $('#profitWins').textContent=wins;
+  reserveAssets.forEach(a=>{const btn=document.querySelector(`[data-reserve="${a}"]`); if(!btn)return; const done=s.items.find(x=>x.asset===a); btn.disabled=!!done || !!s.cooldownUntil; btn.textContent=done?'رزرو ثبت شد ✓':'شروع رزرو ۱۰ دقیقه‌ای'; const st=$('#status'+a); if(done) st.textContent=done.result==='موفق'?'نتیجه نمونه: موفق':'نتیجه نمونه: سوخته';});
+  const hist=$('#reservationHistory'); if(hist){hist.innerHTML=s.items.length?s.items.slice().reverse().map(x=>`<div class="row"><span>${x.asset} — ۱۰ دقیقه</span><b class="${x.result==='موفق'?'good':'bad'}">${x.result}</b></div>`).join(''):'<div class="row"><span class="muted">هنوز رزروی ثبت نشده</span><span>—</span></div>'}
+  if(s.cooldownUntil){$('#cycleState').textContent='چرخه امروز تکمیل شد'; updateCooldown()} else $('#cycleState').textContent=count>=4?'در حال شروع تایمر ۲۴ ساعته':'آماده رزرو '+(count+1);
+}
+function updateCooldown(){const s=loadReserveState(), el=$('#cooldownTimer'); if(!el)return; if(!s.cooldownUntil){el.textContent='—';return} const left=Math.max(0,s.cooldownUntil-Date.now()); if(!left){s.items=[];s.cooldownUntil=0;saveReserveState(s);syncReservations();return} const h=Math.floor(left/3600000),m=Math.floor(left%3600000/60000),sec=Math.floor(left%60000/1000); el.textContent=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;}
+setInterval(updateCooldown,1000);
+$$('[data-reserve]').forEach(btn=>btn.onclick=()=>{
+  const asset=btn.dataset.reserve, s=loadReserveState(); if(s.cooldownUntil){toast('چرخه بعدی هنوز باز نشده');return} if(s.items.some(x=>x.asset===asset))return;
+  const status=$('#status'+asset); let left=10*60; btn.disabled=true;
+  const tick=()=>{status.textContent='رزرو فعال — '+String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0'); if(left--<=0){clearInterval(timer); const trend=Number(btn.dataset.trend||0); const result=trend>=0?'موفق':'سوخته'; s.items.push({asset,result,time:Date.now()}); if(s.items.length>=4)s.cooldownUntil=Date.now()+24*60*60*1000; saveReserveState(s); syncReservations(); toast(result==='موفق'?'رزرو موفق شد':'رزرو سوخت');}}; tick(); const timer=setInterval(tick,1000);
+});
+
+const wheelPrizes=['3 USDT','5 USDT','3 USDT','8 USDT','3 USDT','10 USDT','3 USDT','هندزفری بلوتوث','3 USDT','پاوربانک'];
+const wheelDisc=document.createElement('div');wheelDisc.id='wheel';
+const wrap=$('.wheelWrap'); wrap.appendChild(wheelDisc);
+wheelPrizes.forEach((p,i)=>{
+  const el=document.createElement('span');el.className='sliceLabel';el.textContent=p;
+  const a=i*36+18;el.style.transform=`rotate(${a}deg) translate(56px,-6px) rotate(90deg)`;
+  wheelDisc.appendChild(el);
+});
+let wheelRotation=0,spinning=false;
+function syncChances(){
+  const c=Math.max(0,Number(localStorage.getItem(CHANCES)||2));
+  if($('#homeChances')) $('#homeChances').textContent=c; if($('#spinCount')) $('#spinCount').textContent=c; if($('#refChanceCount')) $('#refChanceCount').textContent=c;
+  $('#spinBtn').disabled=c<=0||spinning;
+}
+function renderHistory(){
+  let h=[];try{h=JSON.parse(localStorage.getItem(SPINS)||'[]')}catch{}
+  const box=$('#spinHistory');
+  if(!h.length){box.innerHTML='<div class="row"><span class="muted">هنوز چرخشی ثبت نشده</span><span>—</span></div>';return}
+  box.innerHTML=h.slice(0,5).map(x=>`<div class="row"><span>${x.time}</span><b class="gold">${x.prize}</b></div>`).join('');
+}
+$('#spinBtn').onclick=()=>{
+  let c=Number(localStorage.getItem(CHANCES)||0);if(c<=0||spinning)return;
+  spinning=true;syncChances();c--;localStorage.setItem(CHANCES,String(c));
+  const idx=Math.floor(Math.random()*wheelPrizes.length);
+  const center=idx*36+18;
+  wheelRotation+=1440+(360-center);
+  wheelDisc.style.transform=`rotate(${wheelRotation}deg)`;
+  $('#winnerText').textContent='در حال چرخش...';
+  setTimeout(()=>{
+    const prize=wheelPrizes[idx];$('#winnerText').textContent='جایزه نمایشی: '+prize;
+    let h=[];try{h=JSON.parse(localStorage.getItem(SPINS)||'[]')}catch{}
+    h.unshift({prize,time:new Date().toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'})});
+    localStorage.setItem(SPINS,JSON.stringify(h.slice(0,10)));spinning=false;syncChances();renderHistory();
+  },4700);
+};
+renderHistory();
+
+async function loadMarket(){
+  const ids='bitcoin,ethereum,solana,binancecoin,ripple,dogecoin';
+  try{
+    const r=await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${ids}&price_change_percentage=24h`);
+    if(!r.ok)throw new Error();
+    const data=await r.json();
+    const map={bitcoin:'BTC',ethereum:'ETH',solana:'SOL',binancecoin:'BNB',ripple:'XRP',dogecoin:'DOGE'};
+    const order=['BTC','ETH','SOL','BNB','XRP','DOGE'];
+    const by={};data.forEach(x=>by[map[x.id]]=x);
+    const items=order.map(sym=>{
+      const x=by[sym],ch=Number(x?.price_change_percentage_24h||0),cls=ch>=0?'up':'down';
+      const price=x?('$'+Number(x.current_price).toLocaleString('en-US',{maximumFractionDigits:x.current_price<1?4:2})):'—';
+      return `<div class="tickerItem"><strong>${sym}</strong><span>${price}</span><span class="${cls}">${ch>=0?'+':''}${ch.toFixed(2)}%</span></div>`
+    }).join('');
+    if($('#tickerTrack')) $('#tickerTrack').innerHTML=items+items;
+  }catch{
+    if($('#tickerTrack')) $('#tickerTrack').innerHTML='<div class="tickerItem"><strong>BTC</strong><span>داده بازار در دسترس نیست</span></div>'
+  }
+}
+setInterval(()=>{if(!$('#appShell').classList.contains('hidden'))loadMarket()},60000);
+
+if(currentUser())enterApp();
+
+async function loadReservationMarket(){
+ try{const r=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin&vs_currencies=usd&include_24hr_change=true');const d=await r.json();const map={BTC:d.bitcoin,ETH:d.ethereum,SOL:d.solana,BNB:d.binancecoin};for(const [a,v] of Object.entries(map)){if(!v)continue;$('#price'+a).textContent='$'+Number(v.usd).toLocaleString('en-US',{maximumFractionDigits:2});const ch=Number(v.usd_24h_change||0);$('#mood'+a).textContent=(ch>=0?'روند ۲۴ساعته مثبت ':'روند ۲۴ساعته منفی ')+ch.toFixed(2)+'%';const b=document.querySelector(`[data-reserve="${a}"]`);if(b)b.dataset.trend=ch;}}catch(e){reserveAssets.forEach(a=>{$('#mood'+a).textContent='داده بازار در دسترس نیست';});}}
+loadReservationMarket();setInterval(loadReservationMarket,60000);
+
+</script>
+</body>
+</html>
