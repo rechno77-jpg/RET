@@ -1,4 +1,3 @@
-
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -46,6 +45,35 @@ CREATE TABLE IF NOT EXISTS withdrawals (
   status TEXT NOT NULL DEFAULT 'pending',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Active principal. Profit is credited to wallet daily and does NOT compound into principal.
+CREATE TABLE IF NOT EXISTS investments (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  principal NUMERIC(24,8) NOT NULL CHECK(principal > 0),
+  monthly_rate NUMERIC(10,8) NOT NULL DEFAULT 0.12 CHECK(monthly_rate >= 0),
+  started_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  last_profit_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  status TEXT NOT NULL DEFAULT 'active' CHECK(status IN ('active','closed')),
+  closed_at TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_investments_user_status
+  ON investments(user_id, status);
+
+-- Audit trail for every wallet movement.
+CREATE TABLE IF NOT EXISTS wallet_ledger (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type TEXT NOT NULL,
+  amount NUMERIC(24,8) NOT NULL,
+  reference_id UUID,
+  description TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_wallet_ledger_user_time
+  ON wallet_ledger(user_id, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS reservations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
