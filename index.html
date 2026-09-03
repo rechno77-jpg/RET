@@ -3,3 +3,1167 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070604">
+<title>RET</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+--bg:#070604;
+--panel:#11100c;
+--panel2:#0c0b08;
+--line:rgba(247,201,86,.16);
+--gold:#f4ca56;
+--gold2:#fff0a0;
+--text:#f7f0da;
+--muted:#9f9782;
+--green:#65dba6;
+--red:#ff8f85;
+--radius:22px
+}
+html{scroll-behavior:smooth}
+body{
+margin:0;
+min-height:100vh;
+font-family:Tahoma,Arial,sans-serif;
+color:var(--text);
+background:
+radial-gradient(760px 420px at 90% -10%,rgba(244,202,86,.14),transparent 62%),
+linear-gradient(180deg,#060503,#090806 52%,#060503);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.hidden{display:none!important}
+.wrap{width:min(1160px,calc(100% - 28px));margin:auto}
+.card{
+background:linear-gradient(180deg,rgba(25,22,14,.86),rgba(12,11,8,.94));
+border:1px solid var(--line);
+border-radius:22px;
+padding:20px
+}
+.gold{color:var(--gold)}
+.muted{color:var(--muted)}
+.good{color:var(--green)}
+.bad{color:var(--red)}
+.btn{
+border:0;
+border-radius:14px;
+padding:12px 16px;
+font-weight:bold
+}
+.btnGold{
+background:linear-gradient(135deg,#fff0a0,#efbd3c,#b87908);
+color:#2c1d00
+}
+.btnGhost{
+background:#111;
+border:1px solid var(--line);
+color:#eee
+}
+
+/* LOGIN */
+#authGate{
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:25px
+}
+.authBox{
+width:min(500px,100%);
+padding:25px
+}
+.logoRow{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:12px;
+font-size:28px;
+font-weight:bold;
+margin-bottom:25px
+}
+.logo{
+width:55px;
+height:55px;
+border-radius:50%;
+display:grid;
+place-items:center;
+font-size:12px;
+color:#392600;
+background:radial-gradient(circle at 28% 22%,#fff9c3,#f4ce62 25%,#c9870e 58%,#6f4500);
+border:2px solid #ffe68c
+}
+.tabs{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+margin-bottom:20px
+}
+.tab{
+padding:12px;
+border:1px solid var(--line);
+background:#090806;
+color:#aaa;
+border-radius:12px
+}
+.tab.active{
+background:rgba(244,202,86,.12);
+color:var(--gold2)
+}
+.field{
+margin-bottom:12px
+}
+.field label{
+display:block;
+font-size:12px;
+color:#c3b99e;
+margin-bottom:7px
+}
+.field input,.field select{
+width:100%;
+background:#090806;
+border:1px solid var(--line);
+border-radius:12px;
+padding:13px;
+color:#fff;
+outline:none
+}
+.authMsg{font-size:12px;min-height:25px;margin-top:12px}
+
+/* HEADER */
+.top{
+position:sticky;
+top:0;
+z-index:50;
+background:rgba(7,6,4,.94);
+border-bottom:1px solid var(--line)
+}
+.nav{
+min-height:72px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px
+}
+.brand{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:22px;
+font-weight:bold
+}
+.brand .logo{width:42px;height:42px}
+.navLinks{
+display:flex;
+gap:4px;
+overflow:auto
+}
+.navLinks a{
+white-space:nowrap;
+padding:10px;
+font-size:13px;
+color:#aaa;
+border-radius:10px
+}
+.navLinks a.active{
+background:rgba(244,202,86,.1);
+color:var(--gold)
+}
+.userArea{
+display:flex;
+gap:8px;
+align-items:center
+}
+.userChip{
+font-size:12px;
+border:1px solid var(--line);
+padding:8px;
+border-radius:10px
+}
+
+/* VIEWS */
+.view{display:none}
+.view.active{display:block}
+.section{padding:35px 0}
+.pageHead{margin-bottom:20px}
+.pageHead h1{margin:0 0 8px;font-size:30px}
+.pageHead p{margin:0;color:var(--muted);line-height:1.8}
+
+/* HOME */
+.ticker{
+overflow:hidden;
+padding:14px;
+margin-top:18px;
+background:#071221;
+border:1px solid rgba(78,153,255,.22);
+border-radius:16px
+}
+.tickerTrack{
+display:flex;
+gap:25px;
+direction:ltr;
+overflow:auto
+}
+.tickerItem{
+white-space:nowrap;
+font-size:12px;
+display:flex;
+gap:7px
+}
+.hero{
+margin-top:14px;
+padding:35px;
+min-height:400px;
+display:grid;
+grid-template-columns:1fr 1fr;
+align-items:center;
+background:
+radial-gradient(500px 300px at 80% 20%,rgba(49,138,255,.15),transparent 65%),
+linear-gradient(145deg,#0a0d12,#08121e,#0d0a05);
+border:1px solid rgba(108,161,229,.16);
+border-radius:28px
+}
+.hero h1{font-size:42px;margin:10px 0}
+.hero p{line-height:2;color:#aab1bb}
+.heroCoin{
+width:260px;
+height:260px;
+border-radius:50%;
+margin:auto;
+display:grid;
+place-items:center;
+font-size:60px;
+font-weight:bold;
+color:#4d3100;
+background:radial-gradient(circle at 32% 25%,#fff7bd,#f1c447 23%,#bb7608 49%,#6d4300 70%,#d49419);
+border:9px double #e8ba3e
+}
+.quick{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:15px
+}
+.quick a{text-align:center}
+
+/* DASHBOARD */
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px
+}
+.stat{
+min-height:130px;
+display:flex;
+flex-direction:column;
+justify-content:center
+}
+.stat span{color:var(--muted);font-size:12px}
+.stat b{font-size:24px;margin-top:10px}
+.grid2{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+margin-top:14px
+}
+.row{
+display:flex;
+justify-content:space-between;
+gap:10px;
+padding:12px 0;
+border-bottom:1px solid var(--line)
+}
+
+/* REFERRAL */
+.refCode{
+direction:ltr;
+font-size:27px;
+font-weight:bold;
+color:var(--gold);
+margin:15px 0
+}
+.userList{
+display:flex;
+flex-wrap:wrap;
+gap:8px
+}
+.userTag{
+padding:8px 10px;
+border:1px solid var(--line);
+border-radius:10px
+}
+
+/* WHEEL */
+.wheelWrap{
+width:min(320px,80vw);
+aspect-ratio:1;
+margin:20px auto;
+position:relative
+}
+#wheel{
+width:100%;
+height:100%;
+border-radius:50%;
+transition:transform 4.5s cubic-bezier(.12,.75,.12,1);
+background:conic-gradient(
+#15b8ff 0 36deg,
+#142f57 36deg 72deg,
+#734cff 72deg 108deg,
+#09223f 108deg 144deg,
+#22d3ee 144deg 180deg,
+#172a46 180deg 216deg,
+#f0c95d 216deg 252deg,
+#0d315b 252deg 288deg,
+#6e56ff 288deg 324deg,
+#0d223b 324deg 360deg
+);
+border:8px solid #315c8d;
+position:relative
+}
+#wheel:after{
+content:"RET";
+position:absolute;
+inset:38%;
+border-radius:50%;
+display:grid;
+place-items:center;
+background:#07101d;
+border:3px solid #4bbcff;
+color:#f6d66f;
+font-weight:bold
+}
+.pointer{
+position:absolute;
+z-index:3;
+top:-10px;
+left:50%;
+transform:translateX(-50%);
+border-left:15px solid transparent;
+border-right:15px solid transparent;
+border-top:30px solid #fff0a0
+}
+
+/* MOBILE */
+@media(max-width:800px){
+.nav{
+align-items:flex-start;
+padding:12px 0;
+flex-wrap:wrap
+}
+.navLinks{
+order:3;
+width:100%
+}
+.hero{
+grid-template-columns:1fr;
+padding:25px 18px
+}
+.hero h1{font-size:32px}
+.heroCoin{
+width:190px;
+height:190px;
+font-size:42px;
+margin-top:25px
+}
+.stats,.quick{grid-template-columns:1fr 1fr}
+.grid2{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<section id="authGate">
+<div class="authBox card">
+
+<div class="logoRow">
+<div class="logo">RET</div>
+RET
+</div>
+
+<div class="tabs">
+<button class="tab active" data-tab="login">ورود</button>
+<button class="tab" data-tab="register">ثبت‌نام</button>
+</div>
+
+<form id="loginForm">
+<div class="field">
+<label>نام کاربری یا ایمیل</label>
+<input id="loginId" required>
+</div>
+
+<div class="field">
+<label>رمز عبور</label>
+<input id="loginPass" type="password" required>
+</div>
+
+<button class="btn btnGold" style="width:100%">ورود به حساب</button>
+<div id="loginMsg" class="authMsg"></div>
+</form>
+
+<form id="registerForm" class="hidden">
+
+<div class="field">
+<label>نام</label>
+<input id="firstName" required>
+</div>
+
+<div class="field">
+<label>نام خانوادگی</label>
+<input id="lastName" required>
+</div>
+
+<div class="field">
+<label>شماره موبایل</label>
+<input id="phone" required>
+</div>
+
+<div class="field">
+<label>ایمیل</label>
+<input id="email" type="email" required>
+</div>
+
+<div class="field">
+<label>نوع مدرک</label>
+<select id="docType">
+<option value="national">کد ملی</option>
+<option value="passport">پاسپورت</option>
+</select>
+</div>
+
+<div class="field">
+<label>شماره مدرک</label>
+<input id="docNumber" required>
+</div>
+
+<div class="field">
+<label>نام کاربری</label>
+<input id="username" required>
+</div>
+
+<div class="field">
+<label>رمز عبور</label>
+<input id="password" type="password" required>
+</div>
+
+<div class="field">
+<label>تکرار رمز عبور</label>
+<input id="password2" type="password" required>
+</div>
+
+<div class="field">
+<label>کد معرف (اختیاری)</label>
+<input id="referrer">
+</div>
+
+<button class="btn btnGold" style="width:100%">ایجاد حساب</button>
+<div id="registerMsg" class="authMsg"></div>
+</form>
+
+</div>
+</section>
+
+
+<div id="appShell" class="hidden">
+
+<header class="top">
+<div class="wrap nav">
+
+<a href="#home" class="brand">
+<div class="logo">RET</div>
+RET
+</a>
+
+<nav class="navLinks">
+<a href="#home">خانه</a>
+<a href="#dashboard">داشبورد</a>
+<a href="#profit">سود روزانه</a>
+<a href="#deposit">واریز</a>
+<a href="#withdraw">برداشت</a>
+<a href="#referrals">دعوت دوستان</a>
+</nav>
+
+<div class="userArea">
+<span id="headerUser" class="userChip">@user</span>
+<button id="logoutBtn" class="btn btnGhost">خروج</button>
+</div>
+
+</div>
+</header>
+
+
+<main>
+
+<section id="home" class="view active">
+<div class="wrap section">
+
+<div class="ticker">
+<div id="tickerTrack" class="tickerTrack">
+<span>در حال دریافت قیمت بازار...</span>
+</div>
+</div>
+
+<div class="hero">
+
+<div>
+<span class="gold">RET PLATFORM</span>
+<h1>پلتفرم سرمایه‌گذاری RET</h1>
+<p>
+مدیریت سرمایه، کیف پول، سود روزانه، برداشت،
+دعوت دوستان و جشنواره‌های RET از یک حساب کاربری.
+</p>
+
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<a href="#dashboard" class="btn btnGold">ورود به داشبورد</a>
+<a href="#deposit" class="btn btnGhost">سرمایه‌گذاری</a>
+</div>
+</div>
+
+<div class="heroCoin">RET</div>
+
+</div>
+
+<div class="quick">
+<a href="#dashboard" class="card">داشبورد</a>
+<a href="#deposit" class="card">واریز</a>
+<a href="#withdraw" class="card">برداشت</a>
+<a href="#referrals" class="card">دعوت دوستان</a>
+</div>
+
+</div>
+</section>
+
+
+<section id="dashboard" class="view">
+<div class="wrap section">
+
+<div class="pageHead">
+<h1>داشبورد</h1>
+<p>خلاصه وضعیت حساب RET شما</p>
+</div>
+
+<div class="stats">
+
+<div class="card stat">
+<span>موجودی کیف پول</span>
+<b id="dashBalance">0.00 USDT</b>
+</div>
+
+<div class="card stat">
+<span>سرمایه فعال</span>
+<b id="dashInvested">0.00 USDT</b>
+</div>
+
+<div class="card stat">
+<span>سود روزانه</span>
+<b id="todayProfit" class="good">0.0000 USDT</b>
+</div>
+
+</div>
+
+<div class="grid2">
+
+<div class="card">
+<h3>طرح RET</h3>
+<div class="row">
+<span>نرخ ماهانه</span>
+<b class="gold">5%</b>
+</div>
+<div class="row">
+<span>محاسبه سود</span>
+<b>روزانه</b>
+</div>
+<div class="row">
+<span>حداقل سرمایه</span>
+<b>50 USDT</b>
+</div>
+</div>
+
+<div class="card">
+<h3>دسترسی سریع</h3>
+<div style="display:grid;gap:10px">
+<a class="btn btnGold" href="#deposit">سرمایه‌گذاری</a>
+<a class="btn btnGhost" href="#withdraw">درخواست برداشت</a>
+<a class="btn btnGhost" href="#referrals">دعوت دوستان</a>
+</div>
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+<section id="profit" class="view">
+<div class="wrap section">
+
+<div class="pageHead">
+<h1>سود روزانه</h1>
+<p>محاسبه سود سرمایه فعال شما</p>
+</div>
+
+<div class="stats">
+
+<div class="card stat">
+<span>اصل سرمایه فعال</span>
+<b id="profitPrincipal">0.00 USDT</b>
+</div>
+
+<div class="card stat">
+<span>سود روزانه</span>
+<b id="profitDaily" class="good">0.0000 USDT</b>
+</div>
+
+<div class="card stat">
+<span>برآورد ماهانه</span>
+<b id="profitMonthly" class="gold">0.00 USDT</b>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:14px">
+<h3>سوابق سود</h3>
+<div id="profitHistory">
+<div class="row">
+<span class="muted">هنوز سودی ثبت نشده</span>
+<span>—</span>
+</div>
+</div>
+</div>
+
+</div>
+</section>
+
+
+<section id="deposit" class="view">
+<div class="wrap section">
+
+<div class="pageHead">
+<h1>واریز و سرمایه‌گذاری</h1>
+<p>سرمایه‌گذاری در طرح RET</p>
+</div>
+
+<div class="grid2">
+
+<div class="card">
+<h3>آدرس کیف پول USDT</h3>
+
+<div id="wallet" style="direction:ltr;word-break:break-all;padding:15px;background:#080705;border-radius:12px">
+YOUR-USDT-WALLET-ADDRESS
+</div>
+
+<button id="copyWallet" class="btn btnGhost" style="margin-top:12px">
+کپی آدرس
+</button>
+</div>
+
+<div class="card">
+<h3>اطلاعات طرح</h3>
+
+<div class="row">
+<span>نرخ سود ماهانه</span>
+<b class="gold">5%</b>
+</div>
+
+<div class="row">
+<span>محاسبه سود</span>
+<b>روزانه</b>
+</div>
+
+<div class="row">
+<span>حداقل سرمایه</span>
+<b>50 USDT</b>
+</div>
+
+<p class="muted" style="line-height:1.9">
+پس از تأیید واریز، سرمایه در حساب کاربری فعال می‌شود.
+</p>
+</div>
+
+</div>
+
+</div>
+</section>
+
+
+<section id="withdraw" class="view">
+<div class="wrap section">
+
+<div class="pageHead">
+<h1>برداشت</h1>
+<p>ثبت درخواست برداشت از کیف پول</p>
+</div>
+
+<div class="card">
+
+<div class="field">
+<label>مبلغ برداشت (USDT)</label>
+<input id="withdrawAmount" type="number" min="100">
+</div>
+
+<button id="setMax" class="btn btnGhost">حداکثر موجودی</button>
+
+<div class="field" style="margin-top:15px">
+<label>شبکه</label>
+<select id="withdrawNetwork">
+<option value="TRC20">TRC20</option>
+<option value="BEP20">BEP20</option>
+</select>
+</div>
+
+<div class="field">
+<label>آدرس کیف پول مقصد</label>
+<input id="withdrawAddress">
+</div>
+
+<div class="row">
+<span>مبلغ</span>
+<b id="gross">0 USDT</b>
+</div>
+
+<div class="row">
+<span>کارمزد 5%</span>
+<b id="fee">0 USDT</b>
+</div>
+
+<div class="row">
+<span>مبلغ دریافتی</span>
+<b id="net" class="good">0 USDT</b>
+</div>
+
+<div id="withdrawWarn" class="authMsg"></div>
+
+<button id="withdrawBtn" class="btn btnGold" disabled>
+ثبت درخواست برداشت
+</button>
+
+</div>
+
+</div>
+</section>
+
+
+<section id="referrals" class="view">
+<div class="wrap section">
+
+<div class="pageHead">
+<h1>دعوت دوستان</h1>
+<p>سیستم معرفی سه نسل RET</p>
+</div>
+
+<div class="grid2">
+
+<div class="card">
+<span class="muted">کد دعوت شما</span>
+<div id="refCode" class="refCode">—</div>
+<button id="copyRef" class="btn btnGold">کپی کد دعوت</button>
+</div>
+
+<div class="card">
+<h3>نسل‌های دعوت</h3>
+<div class="row"><span>نسل اول</span><b>G1</b></div>
+<div class="row"><span>نسل دوم</span><b>G2</b></div>
+<div class="row"><span>نسل سوم</span><b>G3</b></div>
+</div>
+
+</div>
+
+<div class="card" style="margin-top:14px">
+<h3>نسل اول</h3>
+<div id="gen1List" class="userList"></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h3>نسل دوم</h3>
+<div id="gen2List" class="userList"></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h3>نسل سوم</h3>
+<div id="gen3List" class="userList"></div>
+</div>
+
+
+<div class="card" style="margin-top:14px;text-align:center">
+
+<h2>گردونه جوایز RET</h2>
+
+<p>
+شانس‌های باقی‌مانده:
+<b id="spinCount" class="gold">0</b>
+</p>
+
+<div class="wheelWrap">
+<div class="pointer"></div>
+</div>
+
+<button id="spinBtn" class="btn btnGold">
+چرخاندن گردونه
+</button>
+
+<h3 id="winnerText"></h3>
+
+<div id="spinHistory"></div>
+
+</div>
+
+</div>
+</section>
+
+</main>
+</div>
+
+
+<script>
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+
+let RET_USER=null;
+let RET_WALLET={balance:0};
+let RET_INVESTMENTS=[];
+
+const SPINS='ret_spin_history';
+
+function normalize(v){
+return String(v||'').trim().toLowerCase();
+}
+
+function toast(t){
+alert(t);
+}
+
+async function api(url,opt={}){
+const headers={'Content-Type':'application/json',...(opt.headers||{})};
+
+const r=await fetch(url,{
+credentials:'include',
+...opt,
+headers
+});
+
+let d={};
+
+try{
+d=await r.json();
+}catch{}
+
+if(!r.ok){
+const e=new Error(d.error||'REQUEST_FAILED');
+e.code=d.error;
+e.status=r.status;
+throw e;
+}
+
+return d;
+}
+
+function faErr(code){
+const m={
+DUPLICATE:'این اطلاعات قبلاً ثبت شده است.',
+BAD_REFERRER:'کد معرف معتبر نیست.',
+BAD_LOGIN:'نام کاربری/ایمیل یا رمز عبور نادرست است.',
+AUTH_REQUIRED:'لطفاً دوباره وارد حساب شوید.',
+INSUFFICIENT_BALANCE:'موجودی کیف پول کافی نیست.',
+MIN_100:'حداقل برداشت 100 USDT است.',
+ADDRESS_REQUIRED:'آدرس کیف پول مقصد را وارد کنید.',
+NO_CHANCE:'شانس گردونه ندارید.'
+};
+
+return m[code]||'خطایی رخ داد. لطفاً دوباره تلاش کنید.';
+}
+
+
+const qref=new URLSearchParams(location.search).get('ref');
+
+if(qref){
+$('#referrer').value=qref;
+}
+
+
+$$('.tab').forEach(btn=>{
+
+btn.onclick=()=>{
+
+$$('.tab').forEach(b=>{
+b.classList.toggle('active',b===btn);
+});
+
+const register=btn.dataset.tab==='register';
+
+$('#registerForm').classList.toggle('hidden',!register);
+$('#loginForm').classList.toggle('hidden',register);
+
+};
+
+});
+
+
+$('#registerForm').addEventListener('submit',async e=>{
+
+e.preventDefault();
+
+const msg=$('#registerMsg');
+msg.textContent='';
+
+const pass=$('#password').value;
+const pass2=$('#password2').value;
+
+if(pass!==pass2){
+msg.className='authMsg bad';
+msg.textContent='رمز عبور و تکرار آن یکسان نیست.';
+return;
+}
+
+const body={
+firstName:$('#firstName').value.trim(),
+lastName:$('#lastName').value.trim(),
+phone:$('#phone').value.trim(),
+email:normalize($('#email').value),
+docType:$('#docType').value,
+doc:$('#docNumber').value.trim(),
+username:normalize($('#username').value).replace(/^@/,''),
+password:pass,
+referrer:$('#referrer').value.trim()||undefined
+};
+
+try{
+
+const d=await api('/api/auth/register',{
+method:'POST',
+body:JSON.stringify(body)
+});
+
+RET_USER=d.user;
+
+await enterApp();
+
+}catch(err){
+
+msg.className='authMsg bad';
+msg.textContent=faErr(err.code);
+
+}
+
+});
+
+
+$('#loginForm').addEventListener('submit',async e=>{
+
+e.preventDefault();
+
+const msg=$('#loginMsg');
+msg.textContent='';
+
+try{
+
+const d=await api('/api/auth/login',{
+method:'POST',
+body:JSON.stringify({
+id:$('#loginId').value.trim(),
+password:$('#loginPass').value
+})
+});
+
+RET_USER=d.user;
+
+await enterApp();
+
+}catch(err){
+
+msg.className='authMsg bad';
+msg.textContent=faErr(err.code);
+
+}
+
+});
+
+
+function showAuth(){
+
+$('#authGate').classList.remove('hidden');
+$('#appShell').classList.add('hidden');
+
+}
+
+
+async function enterApp(){
+
+if(!RET_USER){
+
+try{
+
+RET_USER=(await api('/api/me')).user;
+
+}catch{
+
+showAuth();
+return;
+
+}
+
+}
+
+$('#authGate').classList.add('hidden');
+$('#appShell').classList.remove('hidden');
+
+$('#headerUser').textContent='@'+RET_USER.username;
+
+route();
+
+loadMarket();
+
+await refreshAccount();
+
+}
+
+
+async function refreshAccount(){
+
+try{
+
+const [w,inv,ledger,refs,wheel]=await Promise.all([
+api('/api/wallet'),
+api('/api/investments'),
+api('/api/wallet/ledger'),
+api('/api/referrals'),
+api('/api/wheel')
+]);
+
+RET_WALLET=w.wallet||{balance:0};
+RET_INVESTMENTS=inv.items||[];
+
+const active=RET_INVESTMENTS.filter(x=>x.status==='active');
+
+const principal=active.reduce(
+(a,x)=>a+Number(x.principal||0),
+0
+);
+
+const daily=active.reduce(
+(a,x)=>a+Number(x.principal||0)*(Number(x.monthly_rate||.05)/30),
+0
+);
+
+$('#dashBalance').textContent=
+Number(RET_WALLET.balance||0).toFixed(2)+' USDT';
+
+$('#dashInvested').textContent=
+principal.toFixed(2)+' USDT';
+
+$('#todayProfit').textContent=
+daily.toFixed(4)+' USDT';
+
+$('#profitPrincipal').textContent=
+principal.toFixed(2)+' USDT';
+
+$('#profitDaily').textContent=
+daily.toFixed(4)+' USDT';
+
+$('#profitMonthly').textContent=
+(daily*30).toFixed(2)+' USDT';
+
+$('#setMax').dataset.max=
+String(RET_WALLET.balance||0);
+
+
+const profits=(ledger.items||[])
+.filter(x=>x.type==='daily_profit')
+.slice(0,8);
+
+$('#profitHistory').innerHTML=
+profits.length
+?
+profits.map(x=>`
+<div class="row">
+<span>${new Date(x.created_at).toLocaleDateString('fa-IR')}</span>
+<b class="good">+${Number(x.amount).toFixed(4)} USDT</b>
+</div>
+`).join('')
+:
+`
+<div class="row">
+<span class="muted">هنوز سودی ثبت نشده</span>
+<span>—</span>
+</div>
+`;
+
+
+$('#refCode').textContent=
+refs.refCode||RET_USER?.refCode||'—';
+
+renderGen('#gen1List',refs.g1||[]);
+renderGen('#gen2List',refs.g2||[]);
+renderGen('#gen3List',refs.g3||[]);
+
+setChances(Number(wheel.chances||0));
+
+}catch(err){
+
+console.warn(err);
+
+if(err.status===401){
+showAuth();
+}
+
+}
+
+}
+
+
+function renderGen(sel,arr){
+
+const el=$(sel);
+
+if(!el)return;
+
+el.innerHTML=
+arr.length
+?
+arr.map(u=>`
+<div class="userTag">
+@${u.username||'user'}
+</div>
+`).join('')
+:
+'<span class="muted">هنوز کاربری در این نسل نیست.</span>';
+
+}
+
+
+$('#logoutBtn').onclick=async()=>{
+
+try{
+await api('/api/auth/logout',{method:'POST'});
+}catch{}
+
+RET_USER=null;
+
+location.hash='';
+
+showAuth();
+
+};
+
+
+const views=$$('.view');
+const routeLinks=$$('a[href^="#"]');
+
+
+function route(){
+
+let id=(location.hash||'#home').slice(1);
+
+const target=document.getElementById(id);
+
+if(!target || !target.classList.contains('view')){
+id='home';
+}
+
+views.forEach(v=>{
+v.classList.toggle('active',v.id===id);
+});
+
+routeLinks.forEach(a=>{
+a.classList.toggle(
+'active',
+a.getAttribute('href')==='#'
