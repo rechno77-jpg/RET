@@ -8,21 +8,28 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const {Pool}=pg;
 const pool=new Pool({connectionString:process.env.DATABASE_URL});
 const app=express();
-const APP_ORIGIN=process.env.APP_ORIGIN || 'http://localhost:3000';
+const APP_ORIGIN=process.env.APP_ORIGIN || '';
 
 const __dirname=path.dirname(fileURLToPath(import.meta.url));
-const publicDir=path.join(__dirname,'..','public');
-const indexFile=path.join(__dirname,'..','index.html');
+const rootDir=path.join(__dirname,'..');
+const publicDir=path.join(rootDir,'public');
+const rootIndexFile=path.join(rootDir,'index.html');
+const publicIndexFile=path.join(publicDir,'index.html');
+const schemaFile=path.join(rootDir,'schema.sql');
 const PgSession=connectPgSimple(session);
 
 app.set('trust proxy',1);
 app.use(cors({
-  origin:APP_ORIGIN,
+  origin:(origin,cb)=>{
+    if(!origin || !APP_ORIGIN || origin===APP_ORIGIN) return cb(null,true);
+    return cb(null,false);
+  },
   credentials:true,
   methods:['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
   allowedHeaders:['Content-Type','Authorization','Idempotency-Key']
@@ -35,9 +42,20 @@ app.use(session({
   store:new PgSession({pool,tableName:'session'}),
   secret:process.env.SESSION_SECRET || 'development-only-change-me',
   resave:false,saveUninitialized:false,
-  cookie:{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:process.env.NODE_ENV==='production'?'none':'lax',maxAge:7*24*60*60*1000}
+  cookie:{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',maxAge:7*24*60*60*1000}
 }));
-app.use(express.static(publicDir,{extensions:['html']}));
+if(fs.existsSync(publicDir)) app.use(express.static(publicDir,{extensions:['html']}));
+
+const asyncHandler=fn=>(req,res,next)=>Promise.resolve(fn(req,res,next)).catch(next);
+
+async function initDatabase(){
+  if(!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not configured');
+  if(!fs.existsSync(schemaFile)) throw new Error(`schema.sql not found at ${schemaFile}`);
+  const sql=fs.readFileSync(schemaFile,'utf8');
+  await pool.query(sql);
+  await pool.query('SELECT 1');
+  console.log('Database schema ready');
+}
 
 const norm=s=>String(s||'').trim().toLowerCase();
 const auth=(req,res,next)=>req.session.userId?next():res.status(401).json({error:'AUTH_REQUIRED'});
@@ -62,7 +80,7 @@ async function marketPrice(asset){
 }
 
 /*
-  12% monthly simple return, accrued once per completed UTC day.
+  5% monthly simple return, accrued once per completed UTC day.
   Daily rate = monthly_rate / 30.
   Profit is credited to wallet and is NOT added to principal, so there is no daily compounding.
 */
@@ -129,10 +147,10 @@ async function accrueDailyProfit(userId){
 
 app.get('/api/health',(_,res)=>res.json({ok:true}));
 
-app.post('/api/auth/register',async(req,res)=>{
+app.post('/api/auth/register',asyncHandler(async(req,res)=>{
   const {firstName,lastName,phone,email,docType,doc,username,password,referrer}=req.body||{};
   if(!firstName||!lastName||!phone||!email||!docType||!doc||!username||!password) return res.status(400).json({error:'REQUIRED'});
-  if(String(password).length<8)return res.status(400).json({error:'PASSWORD_SHORT'});
+  if(String(password).length<6)return res.status(400).json({error:'PASSWORD_SHORT'});
   const client=await pool.connect();
   try{
     await client.query('BEGIN');
@@ -160,38 +178,38 @@ app.post('/api/auth/register',async(req,res)=>{
     if(e.code==='23505')return res.status(409).json({error:'DUPLICATE'});
     console.error(e);res.status(500).json({error:'SERVER'});
   }finally{client.release()}
-});
+}));
 
-app.post('/api/auth/login',async(req,res)=>{
+app.post('/api/auth/login',asyncHandler(async(req,res)=>{
   const id=norm(req.body?.id).replace(/^@/,''); const password=String(req.body?.password||'');
   const u=await one('SELECT * FROM users WHERE username=$1 OR email=$1',[id]);
   if(!u || !(await bcrypt.compare(password,u.password_hash)))return res.status(401).json({error:'BAD_LOGIN'});
   req.session.userId=u.id;res.json({user:publicUser(u)});
-});
+}));
 app.post('/api/auth/logout',auth,(req,res)=>req.session.destroy(()=>res.json({ok:true})));
 
-app.get('/api/me',auth,async(req,res)=>{
+app.get('/api/me',auth,asyncHandler(async(req,res)=>{
   const u=await one('SELECT * FROM users WHERE id=$1',[req.session.userId]);
   if(!u)return res.status(401).json({error:'AUTH_REQUIRED'});
   res.json({user:publicUser(u)});
-});
-app.post('/api/me/password',auth,async(req,res)=>{
+}));
+app.post('/api/me/password',auth,asyncHandler(async(req,res)=>{
   const {currentPassword,newPassword}=req.body||{};
-  if(String(newPassword||'').length<8)return res.status(400).json({error:'PASSWORD_SHORT'});
+  if(String(newPassword||'').length<6)return res.status(400).json({error:'PASSWORD_SHORT'});
   const u=await one('SELECT password_hash FROM users WHERE id=$1',[req.session.userId]);
   if(!u || !(await bcrypt.compare(String(currentPassword||''),u.password_hash)))return res.status(400).json({error:'BAD_CURRENT_PASSWORD'});
   const hash=await bcrypt.hash(String(newPassword),12);
   await pool.query('UPDATE users SET password_hash=$1 WHERE id=$2',[hash,req.session.userId]);
   res.json({ok:true});
-});
+}));
 
-app.get('/api/wallet',auth,async(req,res)=>{
+app.get('/api/wallet',auth,asyncHandler(async(req,res)=>{
   await accrueDailyProfit(req.session.userId);
   const w=await one('SELECT asset,balance,updated_at FROM wallets WHERE user_id=$1',[req.session.userId]);
   res.json({wallet:{asset:w?.asset||'USDT',balance:Number(w?.balance||0),updatedAt:w?.updated_at}});
-});
+}));
 
-app.get('/api/wallet/ledger',auth,async(req,res)=>{
+app.get('/api/wallet/ledger',auth,asyncHandler(async(req,res)=>{
   const rows=(await pool.query(
     `SELECT id,type,amount,reference_id,description,created_at
      FROM wallet_ledger WHERE user_id=$1
@@ -199,9 +217,9 @@ app.get('/api/wallet/ledger',auth,async(req,res)=>{
     [req.session.userId]
   )).rows;
   res.json({items:rows});
-});
+}));
 
-app.get('/api/investments',auth,async(req,res)=>{
+app.get('/api/investments',auth,asyncHandler(async(req,res)=>{
   await accrueDailyProfit(req.session.userId);
   const rows=(await pool.query(
     `SELECT id,principal,monthly_rate,started_at,last_profit_at,status,closed_at
@@ -209,9 +227,9 @@ app.get('/api/investments',auth,async(req,res)=>{
     [req.session.userId]
   )).rows;
   res.json({items:rows});
-});
+}));
 
-app.post('/api/investments/start',auth,async(req,res)=>{
+app.post('/api/investments/start',auth,asyncHandler(async(req,res)=>{
   const amount=Number(req.body?.amount);
   if(!Number.isFinite(amount)||amount<=0)return res.status(400).json({error:'BAD_AMOUNT'});
 
@@ -226,7 +244,7 @@ app.post('/api/investments/start',auth,async(req,res)=>{
 
     const r=await c.query(
       `INSERT INTO investments(user_id,principal,monthly_rate)
-       VALUES($1,$2,0.12) RETURNING *`,
+       VALUES($1,$2,0.05) RETURNING *`,
       [req.session.userId,amount]
     );
 
@@ -243,9 +261,9 @@ app.post('/api/investments/start',auth,async(req,res)=>{
     console.error(e);
     res.status(500).json({error:'SERVER'});
   }finally{c.release()}
-});
+}));
 
-app.post('/api/investments/:id/close',auth,async(req,res)=>{
+app.post('/api/investments/:id/close',auth,asyncHandler(async(req,res)=>{
   await accrueDailyProfit(req.session.userId);
 
   const c=await pool.connect();
@@ -283,18 +301,18 @@ app.post('/api/investments/:id/close',auth,async(req,res)=>{
     console.error(e);
     res.status(500).json({error:'SERVER'});
   }finally{c.release()}
-});
+}));
 
-app.get('/api/transactions',auth,async(req,res)=>{
+app.get('/api/transactions',auth,asyncHandler(async(req,res)=>{
   await accrueDailyProfit(req.session.userId);
   const [d,w]=await Promise.all([
     pool.query(`SELECT id,'deposit' type,amount,network,txid,status,created_at time FROM deposits WHERE user_id=$1`,[req.session.userId]),
     pool.query(`SELECT id,'withdraw' type,amount,network,txid,status,created_at time,fee,net FROM withdrawals WHERE user_id=$1`,[req.session.userId])
   ]);
   res.json({items:[...d.rows,...w.rows].sort((a,b)=>new Date(b.time)-new Date(a.time))});
-});
+}));
 
-app.post('/api/withdrawals',auth,async(req,res)=>{
+app.post('/api/withdrawals',auth,asyncHandler(async(req,res)=>{
   await accrueDailyProfit(req.session.userId);
   const amount=Number(req.body?.amount),network=String(req.body?.network||'TRC20').trim(),address=String(req.body?.address||'').trim();
   if(!Number.isFinite(amount)||amount<100)return res.status(400).json({error:'MIN_100'});
@@ -318,9 +336,9 @@ app.post('/api/withdrawals',auth,async(req,res)=>{
     await c.query('COMMIT');
     res.json({withdrawal:r.rows[0]});
   }catch(e){await c.query('ROLLBACK');console.error(e);res.status(500).json({error:'SERVER'})}finally{c.release()}
-});
+}));
 
-app.get('/api/referrals',auth,async(req,res)=>{
+app.get('/api/referrals',auth,asyncHandler(async(req,res)=>{
   const me=await one('SELECT ref_code FROM users WHERE id=$1',[req.session.userId]);
   const g1=(await pool.query('SELECT id,username,ref_code,created_at FROM users WHERE referrer_user_id=$1 ORDER BY created_at DESC',[req.session.userId])).rows;
   const g1ids=g1.map(x=>x.id);
@@ -329,9 +347,9 @@ app.get('/api/referrals',auth,async(req,res)=>{
   const g2ids=g2.map(x=>x.id);
   if(g2ids.length)g3=(await pool.query('SELECT id,username,ref_code,created_at,referrer_user_id FROM users WHERE referrer_user_id=ANY($1::uuid[])',[g2ids])).rows;
   res.json({refCode:me.ref_code,g1,g2,g3});
-});
+}));
 
-app.get('/api/reservations',auth,async(req,res)=>{
+app.get('/api/reservations',auth,asyncHandler(async(req,res)=>{
   const rows=(await pool.query('SELECT * FROM reservations WHERE user_id=$1 ORDER BY started_at ASC',[req.session.userId])).rows;
   const active=rows.find(x=>x.status==='active');
   if(active && new Date(active.ends_at)<=new Date()){
@@ -344,9 +362,9 @@ app.get('/api/reservations',auth,async(req,res)=>{
   }
   const fresh=(await pool.query('SELECT * FROM reservations WHERE user_id=$1 ORDER BY started_at ASC',[req.session.userId])).rows;
   res.json({items:fresh});
-});
+}));
 
-app.post('/api/reservations/start',auth,async(req,res)=>{
+app.post('/api/reservations/start',auth,asyncHandler(async(req,res)=>{
   const asset=String(req.body?.asset||'').toUpperCase();
   const order=['BTC','ETH','SOL','BNB'];
   if(!order.includes(asset))return res.status(400).json({error:'BAD_ASSET'});
@@ -365,13 +383,13 @@ app.post('/api/reservations/start',auth,async(req,res)=>{
   const r=await pool.query(`INSERT INTO reservations(user_id,asset,ends_at,start_price) VALUES($1,$2,now()+interval '10 minutes',$3) RETURNING *`,
     [req.session.userId,asset,price]);
   res.json({reservation:r.rows[0]});
-});
+}));
 
-app.get('/api/wheel',auth,async(req,res)=>{
+app.get('/api/wheel',auth,asyncHandler(async(req,res)=>{
   const s=await one('SELECT chances,last_prize FROM wheel_state WHERE user_id=$1',[req.session.userId]);
   res.json({chances:Number(s?.chances||0),lastPrize:s?.last_prize||null});
-});
-app.post('/api/wheel/spin',auth,async(req,res)=>{
+}));
+app.post('/api/wheel/spin',auth,asyncHandler(async(req,res)=>{
   const prizes=[['3 USDT',50],['5 USDT',10],['8 USDT',10],['10 USDT',10],['هندزفری بلوتوث',10],['پاوربانک',10]];
   const c=await pool.connect();
   try{
@@ -386,18 +404,28 @@ app.post('/api/wheel/spin',auth,async(req,res)=>{
     await c.query('COMMIT');
     res.json({prize,chances:chances-1});
   }catch(e){await c.query('ROLLBACK');console.error(e);res.status(500).json({error:'SERVER'})}finally{c.release()}
-});
+}));
 
-app.get('/api/notifications',auth,async(req,res)=>{
+app.get('/api/notifications',auth,asyncHandler(async(req,res)=>{
   const rows=(await pool.query('SELECT id,type,title,message,is_read,created_at FROM notifications WHERE user_id=$1 ORDER BY created_at DESC LIMIT 80',[req.session.userId])).rows;
   res.json({items:rows});
-});
-app.post('/api/notifications/read-all',auth,async(req,res)=>{
+}));
+app.post('/api/notifications/read-all',auth,asyncHandler(async(req,res)=>{
   await pool.query('UPDATE notifications SET is_read=true WHERE user_id=$1',[req.session.userId]);res.json({ok:true});
-});
+}));
 
-app.get('*',(req,res)=>res.sendFile(indexFile));
+app.get('*',(req,res,next)=>{
+  const indexFile=fs.existsSync(rootIndexFile)?rootIndexFile:(fs.existsSync(publicIndexFile)?publicIndexFile:null);
+  if(!indexFile) return res.status(404).json({error:'INDEX_NOT_FOUND'});
+  res.sendFile(indexFile,err=>err?next(err):undefined);
+});
 app.use((err,req,res,next)=>{console.error(err);res.status(500).json({error:'SERVER'})});
 
 const port=Number(process.env.PORT||3000);
-app.listen(port,()=>console.log(`RET server on :${port}`));
+try{
+  await initDatabase();
+  app.listen(port,()=>console.log(`RET server on :${port}`));
+}catch(err){
+  console.error('Startup failed:',err);
+  process.exit(1);
+}
