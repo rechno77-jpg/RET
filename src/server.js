@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -61,6 +60,72 @@ async function marketPrice(asset){
   }catch{return null}
 }
 
+/*
+  12% monthly simple return, accrued once per completed UTC day.
+  Daily rate = monthly_rate / 30.
+  Profit is credited to wallet and is NOT added to principal, so there is no daily compounding.
+*/
+async function accrueDailyProfit(userId){
+  const c=await pool.connect();
+  try{
+    await c.query('BEGIN');
+
+    const investments=(await c.query(
+      `SELECT * FROM investments
+       WHERE user_id=$1 AND status='active'
+       FOR UPDATE`,
+      [userId]
+    )).rows;
+
+    let totalProfit=0;
+
+    for(const inv of investments){
+      const now=new Date();
+      const last=new Date(inv.last_profit_at);
+
+      const nowDay=Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate());
+      const lastDay=Date.UTC(last.getUTCFullYear(),last.getUTCMonth(),last.getUTCDate());
+      const days=Math.floor((nowDay-lastDay)/86400000);
+
+      if(days<=0)continue;
+
+      const principal=Number(inv.principal);
+      const monthlyRate=Number(inv.monthly_rate);
+      const profit=+(principal*(monthlyRate/30)*days).toFixed(8);
+
+      if(profit>0){
+        await c.query(
+          'UPDATE wallets SET balance=balance+$1,updated_at=now() WHERE user_id=$2',
+          [profit,userId]
+        );
+
+        await c.query(
+          `INSERT INTO wallet_ledger(user_id,type,amount,reference_id,description)
+           VALUES($1,'daily_profit',$2,$3,$4)`,
+          [userId,profit,inv.id,`سود ${days} روز با نرخ ماهانه ${(monthlyRate*100).toFixed(2)}٪`]
+        );
+
+        totalProfit+=profit;
+      }
+
+      await c.query(
+        `UPDATE investments
+         SET last_profit_at=date_trunc('day',now())
+         WHERE id=$1`,
+        [inv.id]
+      );
+    }
+
+    await c.query('COMMIT');
+    return +totalProfit.toFixed(8);
+  }catch(e){
+    await c.query('ROLLBACK');
+    throw e;
+  }finally{
+    c.release();
+  }
+}
+
 app.get('/api/health',(_,res)=>res.json({ok:true}));
 
 app.post('/api/auth/register',async(req,res)=>{
@@ -120,11 +185,107 @@ app.post('/api/me/password',auth,async(req,res)=>{
 });
 
 app.get('/api/wallet',auth,async(req,res)=>{
+  await accrueDailyProfit(req.session.userId);
   const w=await one('SELECT asset,balance,updated_at FROM wallets WHERE user_id=$1',[req.session.userId]);
   res.json({wallet:{asset:w?.asset||'USDT',balance:Number(w?.balance||0),updatedAt:w?.updated_at}});
 });
 
+app.get('/api/wallet/ledger',auth,async(req,res)=>{
+  const rows=(await pool.query(
+    `SELECT id,type,amount,reference_id,description,created_at
+     FROM wallet_ledger WHERE user_id=$1
+     ORDER BY created_at DESC LIMIT 200`,
+    [req.session.userId]
+  )).rows;
+  res.json({items:rows});
+});
+
+app.get('/api/investments',auth,async(req,res)=>{
+  await accrueDailyProfit(req.session.userId);
+  const rows=(await pool.query(
+    `SELECT id,principal,monthly_rate,started_at,last_profit_at,status,closed_at
+     FROM investments WHERE user_id=$1 ORDER BY started_at DESC`,
+    [req.session.userId]
+  )).rows;
+  res.json({items:rows});
+});
+
+app.post('/api/investments/start',auth,async(req,res)=>{
+  const amount=Number(req.body?.amount);
+  if(!Number.isFinite(amount)||amount<=0)return res.status(400).json({error:'BAD_AMOUNT'});
+
+  const c=await pool.connect();
+  try{
+    await c.query('BEGIN');
+    const wr=await c.query('SELECT balance FROM wallets WHERE user_id=$1 FOR UPDATE',[req.session.userId]);
+    const bal=Number(wr.rows[0]?.balance||0);
+    if(bal<amount){await c.query('ROLLBACK');return res.status(400).json({error:'INSUFFICIENT_BALANCE'})}
+
+    await c.query('UPDATE wallets SET balance=balance-$1,updated_at=now() WHERE user_id=$2',[amount,req.session.userId]);
+
+    const r=await c.query(
+      `INSERT INTO investments(user_id,principal,monthly_rate)
+       VALUES($1,$2,0.12) RETURNING *`,
+      [req.session.userId,amount]
+    );
+
+    await c.query(
+      `INSERT INTO wallet_ledger(user_id,type,amount,reference_id,description)
+       VALUES($1,'investment_start',$2,$3,'انتقال موجودی به سرمایه‌گذاری')`,
+      [req.session.userId,-amount,r.rows[0].id]
+    );
+
+    await c.query('COMMIT');
+    res.json({investment:r.rows[0]});
+  }catch(e){
+    await c.query('ROLLBACK');
+    console.error(e);
+    res.status(500).json({error:'SERVER'});
+  }finally{c.release()}
+});
+
+app.post('/api/investments/:id/close',auth,async(req,res)=>{
+  await accrueDailyProfit(req.session.userId);
+
+  const c=await pool.connect();
+  try{
+    await c.query('BEGIN');
+    const r=await c.query(
+      `SELECT * FROM investments
+       WHERE id=$1 AND user_id=$2 AND status='active'
+       FOR UPDATE`,
+      [req.params.id,req.session.userId]
+    );
+    const inv=r.rows[0];
+    if(!inv){await c.query('ROLLBACK');return res.status(404).json({error:'NOT_FOUND'})}
+
+    const principal=Number(inv.principal);
+
+    await c.query(
+      `UPDATE investments SET status='closed',closed_at=now() WHERE id=$1`,
+      [inv.id]
+    );
+    await c.query(
+      'UPDATE wallets SET balance=balance+$1,updated_at=now() WHERE user_id=$2',
+      [principal,req.session.userId]
+    );
+    await c.query(
+      `INSERT INTO wallet_ledger(user_id,type,amount,reference_id,description)
+       VALUES($1,'investment_close',$2,$3,'بازگشت اصل سرمایه به کیف پول')`,
+      [req.session.userId,principal,inv.id]
+    );
+
+    await c.query('COMMIT');
+    res.json({ok:true,returnedPrincipal:principal});
+  }catch(e){
+    await c.query('ROLLBACK');
+    console.error(e);
+    res.status(500).json({error:'SERVER'});
+  }finally{c.release()}
+});
+
 app.get('/api/transactions',auth,async(req,res)=>{
+  await accrueDailyProfit(req.session.userId);
   const [d,w]=await Promise.all([
     pool.query(`SELECT id,'deposit' type,amount,network,txid,status,created_at time FROM deposits WHERE user_id=$1`,[req.session.userId]),
     pool.query(`SELECT id,'withdraw' type,amount,network,txid,status,created_at time,fee,net FROM withdrawals WHERE user_id=$1`,[req.session.userId])
@@ -133,6 +294,7 @@ app.get('/api/transactions',auth,async(req,res)=>{
 });
 
 app.post('/api/withdrawals',auth,async(req,res)=>{
+  await accrueDailyProfit(req.session.userId);
   const amount=Number(req.body?.amount),network=String(req.body?.network||'TRC20').trim(),address=String(req.body?.address||'').trim();
   if(!Number.isFinite(amount)||amount<100)return res.status(400).json({error:'MIN_100'});
   if(!address)return res.status(400).json({error:'ADDRESS_REQUIRED'});
@@ -146,6 +308,11 @@ app.post('/api/withdrawals',auth,async(req,res)=>{
     await c.query('UPDATE wallets SET balance=balance-$1,updated_at=now() WHERE user_id=$2',[amount,req.session.userId]);
     const r=await c.query(`INSERT INTO withdrawals(user_id,amount,fee,net,network,address) VALUES($1,$2,$3,$4,$5,$6) RETURNING *`,
       [req.session.userId,amount,fee,net,network,address]);
+    await c.query(
+      `INSERT INTO wallet_ledger(user_id,type,amount,reference_id,description)
+       VALUES($1,'withdrawal',$2,$3,$4)`,
+      [req.session.userId,-amount,r.rows[0].id,`برداشت؛ کارمزد ۵٪ = ${fee} USDT`]
+    );
     await c.query(`INSERT INTO notifications(user_id,type,title,message) VALUES($1,'withdraw','درخواست برداشت','درخواست برداشت شما ثبت شد.')`,[req.session.userId]);
     await c.query('COMMIT');
     res.json({withdrawal:r.rows[0]});
